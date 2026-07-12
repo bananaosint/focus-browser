@@ -133,6 +133,11 @@ if (isRealPng) {
     const icoBuffer = Buffer.concat([header, entry, pngBuffer])
     fs.writeFileSync(outPath, icoBuffer)
     console.log(`Wrote custom high-definition icon from ${srcPngPath} to ${outPath} (${icoBuffer.length} bytes)`)
+
+    // Write PNG icon for macOS
+    const macPngPath = path.join(OUT_DIR, 'icon.png')
+    fs.copyFileSync(srcPngPath, macPngPath)
+    console.log(`Copied custom PNG icon to ${macPngPath}`)
   } catch (err) {
     console.error('Failed to compile custom icon from PNG:', err)
   }
@@ -143,4 +148,10 @@ if (isRealPng) {
   const ico = buildIco('#5b8def', [16, 32, 48, 256])
   fs.writeFileSync(outPath, ico)
   console.log(`Wrote default blue circle icon to ${outPath} (${ico.length} bytes)`)
+
+  // Write default blue circle PNG for macOS
+  const macPngPath = path.join(OUT_DIR, 'icon.png')
+  const defaultPng = buildDotPng('#5b8def', 512)
+  fs.writeFileSync(macPngPath, defaultPng)
+  console.log(`Wrote default blue circle PNG icon to ${macPngPath}`)
 }

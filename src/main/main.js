@@ -303,7 +303,83 @@ function createBrowserWindow(isPrimary, isIncognito = false) {
   // default File/Edit/View menu is stripped since our own toolbar replaces
   // it. Set once — Menu.setApplicationMenu applies to every window Electron
   // creates afterward, primary or secondary, so it doesn't need repeating.
-  if (isPrimary) Menu.setApplicationMenu(null)
+  if (isPrimary) {
+    if (process.platform === 'darwin') {
+      const template = [
+        {
+          label: app.name,
+          submenu: [
+            { role: 'about' },
+            { type: 'separator' },
+            { role: 'services' },
+            { type: 'separator' },
+            { role: 'hide' },
+            { role: 'hideOthers' },
+            { role: 'unhide' },
+            { type: 'separator' },
+            { role: 'quit' }
+          ]
+        },
+        {
+          label: 'File',
+          submenu: [
+            { role: 'close' }
+          ]
+        },
+        {
+          label: 'Edit',
+          submenu: [
+            { role: 'undo' },
+            { role: 'redo' },
+            { type: 'separator' },
+            { role: 'cut' },
+            { role: 'copy' },
+            { role: 'paste' },
+            { role: 'pasteAndMatchStyle' },
+            { role: 'delete' },
+            { role: 'selectAll' },
+            { type: 'separator' },
+            {
+              label: 'Speech',
+              submenu: [
+                { role: 'startSpeaking' },
+                { role: 'stopSpeaking' }
+              ]
+            }
+          ]
+        },
+        {
+          label: 'View',
+          submenu: [
+            { role: 'reload' },
+            { role: 'forceReload' },
+            { role: 'toggleDevTools' },
+            { type: 'separator' },
+            { role: 'resetZoom' },
+            { role: 'zoomIn' },
+            { role: 'zoomOut' },
+            { type: 'separator' },
+            { role: 'togglefullscreen' }
+          ]
+        },
+        {
+          label: 'Window',
+          submenu: [
+            { role: 'minimize' },
+            { role: 'zoom' },
+            { type: 'separator' },
+            { role: 'front' },
+            { type: 'separator' },
+            { role: 'window' }
+          ]
+        }
+      ]
+      const menu = Menu.buildFromTemplate(template)
+      Menu.setApplicationMenu(menu)
+    } else {
+      Menu.setApplicationMenu(null)
+    }
+  }
   if (isPrimary) workspace.setWindow(localWin)
 
   const localChromeView = new WebContentsView({
@@ -508,7 +584,9 @@ function zoomActiveTab(webContents, direction) {
 // preventDefault, which matters for things like Ctrl+W: without it, the
 // keystroke would also reach whatever page or input field has focus.
 function handleGlobalShortcut(input, webContents) {
-  if (input.type !== 'keyDown' || !input.control || input.alt || input.meta) return false
+  const isCmdOrCtrl = process.platform === 'darwin' ? input.meta : input.control
+  const isOtherModifier = process.platform === 'darwin' ? input.control || input.alt : input.meta || input.alt
+  if (input.type !== 'keyDown' || !isCmdOrCtrl || isOtherModifier) return false
   const key = input.key.toLowerCase()
 
   if (key === 'n' && !input.shift) {
@@ -1025,7 +1103,18 @@ function registerIpcHandlers() {
     return resolved
   })
 
-  ipcMain.handle('shortcuts:getList', () => SHORTCUTS)
+  ipcMain.handle('shortcuts:getList', () => {
+    if (process.platform === 'darwin') {
+      return SHORTCUTS.map(group => ({
+        ...group,
+        items: group.items.map(item => ({
+          ...item,
+          keys: item.keys.map(k => k === 'Ctrl' ? 'Cmd' : k)
+        }))
+      }))
+    }
+    return SHORTCUTS
+  })
 
   ipcMain.handle('settings:getMeta', () => store.get('settings'))
   ipcMain.on('settings:setLastCategory', (_e, category) => {

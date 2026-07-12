@@ -17,7 +17,8 @@ function attachDevToolsToggle(webContents) {
   webContents.on('before-input-event', (_event, input) => {
     if (input.type !== 'keyDown') return
     const isF12 = input.key === 'F12'
-    const isCtrlShiftI = input.control && input.shift && input.key.toLowerCase() === 'i'
+    const isCmdOrCtrl = process.platform === 'darwin' ? input.meta : input.control
+    const isCtrlShiftI = isCmdOrCtrl && input.shift && input.key.toLowerCase() === 'i'
     if (isF12 || isCtrlShiftI) webContents.toggleDevTools()
   })
 }
