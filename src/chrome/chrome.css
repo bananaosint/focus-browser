@@ -1,0 +1,421 @@
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, "Segoe UI", Roboto, sans-serif; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: #1e1f22;
+  color: #e4e4e7;
+  overflow: hidden;
+  user-select: none;
+}
+
+#tab-strip {
+  display: flex;
+  align-items: center;
+  height: 38px;
+  background: #1e1f22;
+  padding: 0 6px;
+}
+
+#tabs {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  overflow-x: auto;
+  /* flex-shrink (not flex-grow) — #tabs only takes as much width as its tabs
+     need, so the + button sits right after the last tab instead of getting
+     pushed to the far right edge of the strip when there's only a few tabs.
+     min-width:0 lets it still shrink below content size to enable internal
+     scroll once there are enough tabs to overflow. */
+  flex: 0 1 auto;
+  min-width: 0;
+  scrollbar-width: none;
+}
+#tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 10px;
+  margin-right: 4px;
+  border-radius: 6px;
+  background: #2a2b2f;
+  font-size: 12.5px;
+  white-space: nowrap;
+  max-width: 180px;
+  cursor: pointer;
+  border-top: 3px solid transparent;
+  flex-shrink: 0;
+}
+.tab.active { background: #35363b; color: #fff; }
+.tab.frozen { opacity: 0.55; }
+.tab.frozen:hover { opacity: 0.8; }
+.tab .title { overflow: hidden; text-overflow: ellipsis; max-width: 120px; }
+.tab .close { opacity: 0; margin-left: auto; font-size: 12px; color: #999; }
+.tab:hover .close { opacity: 1; }
+.tab .close:hover { color: #fff; }
+.tab .favicon { width: 12px; height: 12px; border-radius: 2px; background: #555; flex-shrink: 0; overflow: hidden; }
+.tab .favicon img { width: 12px; height: 12px; display: block; }
+
+#new-tab-btn {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #ccc;
+  font-size: 16px;
+  cursor: pointer;
+}
+#new-tab-btn:hover { background: #2a2b2f; }
+
+#toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 38px;
+  padding: 0 8px;
+  background: #202124;
+  border-bottom: 1px solid #2f3034;
+}
+
+#toolbar button {
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #ccc;
+  font-size: 14px;
+  cursor: pointer;
+}
+#toolbar button:hover { background: #2a2b2f; }
+#toolbar button:disabled { opacity: 0.35; cursor: default; }
+#toolbar button:disabled:hover { background: transparent; }
+#toolbar button.toolbar-hidden { display: none; }
+
+#address-container {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#address-bar {
+  width: 100%;
+  height: 28px;
+  border-radius: 14px;
+  border: 1px solid #33343a;
+  background: #17181a;
+  color: #e4e4e7;
+  padding: 0 34px 0 14px;
+  font-size: 12.5px;
+  outline: none;
+}
+#address-bar:focus { border-color: #5b8def; }
+
+#heart-btn {
+  position: absolute;
+  right: 8px;
+  width: 20px !important;
+  height: 20px !important;
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+  color: #8c8d93 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease, transform 0.1s ease;
+  z-index: 5;
+}
+#heart-btn:hover {
+  color: #ff8fa3 !important;
+  transform: scale(1.1);
+}
+#heart-btn.favorited {
+  color: #ff4b72 !important;
+}
+#heart-btn.favorited svg {
+  fill: currentColor;
+}
+#heart-btn.hidden {
+  display: none !important;
+}
+
+#new-group-btn {
+  width: auto !important;
+  padding: 0 10px !important;
+  font-size: 11.5px !important;
+}
+/* Strips the one "extra" toolbar affordance this minimal chrome has — the
+   closest analog available here to the plan's "hide bookmarks bar/extensions
+   row" for a browser that never had either. */
+body.focus-mode #new-group-btn { display: none; }
+
+#reader-btn { font-size: 13px !important; }
+#reader-btn.active { background: #2a3a52; color: #9cc4ff; }
+#reader-btn.active:hover { background: #33455f; }
+
+#workspace-btn { font-size: 13px !important; }
+#workspace-btn.active { background: #2a3a52; color: #9cc4ff; }
+#workspace-btn.active:hover { background: #33455f; }
+
+#focus-mode-btn {
+  width: auto !important;
+  padding: 0 10px !important;
+  font-size: 11.5px !important;
+}
+#focus-mode-btn.active { background: #2f4a33; color: #a3e0a8; }
+#focus-mode-btn.active:hover { background: #395a3e; }
+
+#pomodoro-btn {
+  width: auto !important;
+  padding: 0 10px !important;
+  font-size: 12px !important;
+  font-variant-numeric: tabular-nums;
+  color: #8f9096;
+}
+#pomodoro-btn.running { color: #ccc; }
+#pomodoro-btn.running.phase-work { color: #e08a87; }
+#pomodoro-btn.running.phase-shortBreak { color: #8fce8f; }
+#pomodoro-btn.running.phase-longBreak { color: #8fb2ef; }
+
+#settings-btn { font-size: 15px !important; }
+
+#launcher-btn { font-size: 13px !important; }
+#dashboard-btn { font-size: 13px !important; }
+
+#ai-chat-btn { font-size: 13px !important; }
+#ai-chat-btn.active { background: #2a3a52; color: #9cc4ff; }
+#ai-chat-btn.active:hover { background: #33455f; }
+
+#suggestions {
+  position: fixed;
+  background: #202124;
+  border: 1px solid #33343a;
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 500;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+}
+#suggestions.hidden { display: none; }
+.suggestion {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid #26272b;
+}
+.suggestion:last-child { border-bottom: none; }
+.suggestion:hover, .suggestion.selected { background: #2a2b2f; }
+.suggestion .s-title {
+  font-size: 12.5px;
+  color: #e4e4e7;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.suggestion .s-url {
+  font-size: 11px;
+  color: #8f9096;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+#toast {
+  position: fixed;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2a2b2f;
+  border: 1px solid #3a3b40;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 12px;
+  color: #ddd;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  z-index: 998;
+}
+#toast.hidden { display: none; }
+
+/* Flashing Pomodoro alarm alert */
+@keyframes alarm-flash {
+  0% { background-color: transparent; color: #ff5c5c; box-shadow: 0 0 0px rgba(255, 92, 92, 0); }
+  50% { background-color: rgba(255, 92, 92, 0.2); color: #ff5c5c; box-shadow: inset 0 0 4px rgba(255, 92, 92, 0.4); }
+  100% { background-color: transparent; color: #ff5c5c; box-shadow: 0 0 0px rgba(255, 92, 92, 0); }
+}
+
+#pomodoro-btn.alarm-ringing {
+  animation: alarm-flash 1s infinite;
+  border: 1px solid #ff5c5c !important;
+  border-radius: 6px;
+  color: #ff5c5c !important;
+  font-weight: bold;
+}
+
+#find-box {
+  position: absolute;
+  top: 42px;
+  right: 12px;
+  background: #2a2b2f;
+  border: 1px solid #3d3e42;
+  border-radius: 8px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  z-index: 1000;
+}
+#find-box.hidden { display: none; }
+#find-input {
+  background: #17181a;
+  border: 1px solid #33343a;
+  border-radius: 4px;
+  color: #e4e4e7;
+  padding: 4px 8px;
+  font-size: 12px;
+  outline: none;
+  width: 160px;
+}
+#find-input:focus { border-color: #5b8def; }
+#find-count {
+  font-size: 11px;
+  color: #8f9096;
+  min-width: 40px;
+  text-align: center;
+}
+#find-box button {
+  background: transparent;
+  border: none;
+  color: #ccc;
+  cursor: pointer;
+  padding: 4px 6px;
+  font-size: 11px;
+  border-radius: 4px;
+}
+#find-box button:hover { background: #35363b; color: #fff; }
+
+#zoom-badge {
+  position: absolute;
+  right: 32px;
+  background: #2a2b2f;
+  color: #a3a3a8;
+  font-size: 10.5px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 1px solid #3d3e42;
+  transition: all 0.15s ease;
+  z-index: 6;
+}
+#zoom-badge:hover {
+  background: #35363b;
+  color: #fff;
+  border-color: #5b8def;
+}
+#zoom-badge.hidden { display: none; }
+
+.tab-audio-btn {
+  background: transparent;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  border-radius: 3px;
+  margin-left: 2px;
+}
+.tab-audio-btn:hover { background: #3d3e42; color: #fff; }
+.tab-audio-btn svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+}
+
+/* Deliberately loud, not just "a bit darker" — this state means what's
+   happening in this tab isn't saved anywhere, and that should be obvious
+   at a glance, not something you notice only after checking. Violet is
+   used nowhere else in the UI, so it reads unambiguously as "different
+   mode" rather than a variant of the normal palette. */
+#incognito-badge {
+  display: none;
+  align-items: center;
+  gap: 5px;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: 11px;
+  background: #3a2a5c;
+  color: #d8c8ff;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-right: 6px;
+}
+#incognito-badge svg { width: 13px; height: 13px; flex-shrink: 0; }
+
+body.incognito {
+  background: #14101f;
+}
+body.incognito #incognito-badge {
+  display: flex;
+}
+body.incognito #tab-strip {
+  background: #1a1430;
+  box-shadow: inset 0 -2px 0 #4a3480;
+}
+body.incognito #toolbar {
+  background: #1e1733;
+  border-bottom-color: #4a3480;
+}
+body.incognito #toolbar button:hover {
+  background: #2e2450;
+}
+body.incognito .tab {
+  background: #251d40;
+  color: #d8c8ff;
+}
+body.incognito .tab.active {
+  background: #3a2a5c;
+  color: #fff;
+  border-top-color: #8b6fd9;
+}
+body.incognito .tab.incognito .favicon {
+  background: transparent;
+  color: #b39ddb;
+}
+body.incognito #address-bar {
+  background: #14101f;
+  border-color: #4a3480;
+  color: #e6dcff;
+}
+body.incognito #address-bar:focus {
+  border-color: #8b6fd9;
+}
+
+/* A regular (non-incognito) window can still have individually-opened
+   incognito tabs mixed in with normal ones (right-click the "+" button) —
+   those get the same violet tab styling without the whole window (or
+   toolbar/badge) switching modes, since the other open tabs are still
+   perfectly normal. */
+.tab.incognito {
+  background: #251d40;
+  color: #d8c8ff;
+  border-top: 3px solid #6b4fb0;
+}
+.tab.incognito.active {
+  background: #3a2a5c;
+  color: #fff;
+}
+.tab.incognito .favicon {
+  background: transparent;
+  color: #b39ddb;
+}

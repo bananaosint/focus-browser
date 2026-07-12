@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>chrome</title>
+  <link rel="stylesheet" href="chrome.css" />
+</head>
+<body>
+  <div id="tab-strip">
+    <div id="tabs"></div>
+    <button id="new-tab-btn" title="New tab">+</button>
+  </div>
+  <div id="toolbar">
+    <button id="workspace-btn" title="Toggle workspace sidebar">&#128193;</button>
+    <button id="back-btn" title="Back">&#8592;</button>
+    <button id="forward-btn" title="Forward">&#8594;</button>
+    <button id="reload-btn" title="Reload">&#8635;</button>
+    <div id="incognito-badge" title="This tab is incognito — nothing here is saved to history or usage stats">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/>
+        <circle cx="12" cy="12" r="3"/>
+      </svg>
+      <span>Incognito</span>
+    </div>
+    <div id="address-container">
+      <input id="address-bar" type="text" placeholder="Search or enter address" />
+      <span id="zoom-badge" class="hidden">100%</span>
+      <button id="heart-btn" title="Bookmark this page">
+        <svg class="heart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+      </button>
+    </div>
+    <button id="reader-btn" title="Reader view">&#128214;</button>
+    <button id="new-group-btn" title="Put this tab in a new group">Group</button>
+    <button id="focus-mode-btn" title="Toggle Focus Mode">Focus</button>
+    <button id="pomodoro-btn" title="Focus timer">25:00</button>
+    <button id="launcher-btn" title="Launch profile">&#128640;</button>
+    <button id="dashboard-btn" title="Usage dashboard">&#128202;</button>
+    <button id="ai-chat-btn" title="AI Chat">&#129302;</button>
+    <button id="settings-btn" title="Settings">&#9881;</button>
+  </div>
+  <div id="find-box" class="hidden">
+    <input id="find-input" type="text" placeholder="Find in page..." />
+    <span id="find-count">0 of 0</span>
+    <button id="find-prev" title="Previous">&#8593;</button>
+    <button id="find-next" title="Next">&#8595;</button>
+    <button id="find-close" title="Close">✕</button>
+  </div>
+  <div id="suggestions" class="hidden"></div>
+  <div id="toast" class="hidden"></div>
+  <script src="chrome.js"></script>
+</body>
+</html>

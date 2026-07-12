@@ -1,0 +1,93 @@
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, "Segoe UI", Roboto, sans-serif; }
+
+html, body {
+  height: 100%;
+  background: #1e1f22;
+  color: #e4e4e7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  transition: background 0.3s ease;
+}
+
+body.phase-work { background: #241d1d; }
+body.phase-shortBreak { background: #1b241d; }
+body.phase-longBreak { background: #1b1f24; }
+
+#phase-label {
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8f9096;
+  margin-bottom: 6px;
+}
+
+#time-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+#time {
+  font-size: 56px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  min-width: 140px;
+  text-align: center;
+}
+
+.time-adjust {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.adjust-btn {
+  font-family: inherit;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 8px;
+  cursor: pointer;
+  background: #2a2b2f;
+  color: #b7b8bd;
+  min-width: 40px;
+}
+.adjust-btn:hover { background: #35363b; color: #e4e4e7; }
+
+#cycle-dots {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #35363b;
+}
+.dot.filled { background: #d9534f; }
+body.phase-shortBreak .dot.filled { background: #5cb85c; }
+body.phase-longBreak .dot.filled { background: #5b8def; }
+
+#controls { display: flex; gap: 8px; }
+#controls button {
+  font-family: inherit;
+  font-size: 12.5px;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  background: #2a2b2f;
+  color: #e4e4e7;
+}
+#controls button:hover { background: #35363b; }
+#primary-btn { background: #3a4a6b; color: #cfe0ff; }
+#primary-btn:hover { background: #46587f; }
+
+#mute-btn { padding: 10px 12px; font-size: 14px; }
+#mute-btn.active { background: #5c3a3a; color: #ffcfcf; }
+#mute-btn.active:hover { background: #6f4646; }

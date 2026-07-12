@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Focus Timer</title>
+  <link rel="stylesheet" href="pomodoro.css" />
+</head>
+<body>
+  <div id="phase-label">Work</div>
+
+  <div id="time-row">
+    <div class="time-adjust">
+      <button class="adjust-btn" data-delta="-20">-20</button>
+      <button class="adjust-btn" data-delta="-5">-5</button>
+      <button class="adjust-btn" data-delta="-1">-1</button>
+    </div>
+    <div id="time">25:00</div>
+    <div class="time-adjust">
+      <button class="adjust-btn" data-delta="1">+1</button>
+      <button class="adjust-btn" data-delta="5">+5</button>
+      <button class="adjust-btn" data-delta="20">+20</button>
+    </div>
+  </div>
+
+  <div id="cycle-dots"></div>
+
+  <div id="controls">
+    <button id="primary-btn">Start</button>
+    <button id="reset-btn">Reset</button>
+    <button id="skip-btn">Skip</button>
+    <button id="mute-btn" title="Mute session-end sound">&#128276;</button>
+  </div>
+
+  <script src="pomodoro-ui.js"></script>
+</body>
+</html>

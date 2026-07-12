@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>New Tab</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      height: 100%;
+      background: #141416;
+      color: #f4f4f7;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto;
+    }
+
+    .home-container {
+      width: 100%;
+      max-width: 800px;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .home-header {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .home-header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      background: linear-gradient(135deg, #ff8fa3 0%, #5b8def 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .home-header .subtitle {
+      font-size: 13px;
+      color: #8c8d93;
+      font-weight: 500;
+    }
+
+    .bookmarks-section {
+      width: 100%;
+      background: #1a1b1e;
+      border: 1px solid #28292d;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #28292d;
+      padding-bottom: 10px;
+    }
+
+    .bookmarks-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .bookmark-card {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: #141416;
+      border: 1px solid #28292d;
+      border-radius: 20px;
+      text-decoration: none;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      cursor: pointer;
+      max-width: 180px;
+    }
+
+    .bookmark-card:hover {
+      background: #232429;
+      border-color: #ff8fa3;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 143, 163, 0.1);
+    }
+
+    .bookmark-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #ffffff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+      flex-shrink: 0;
+    }
+
+    .bookmark-title {
+      font-size: 12px;
+      font-weight: 500;
+      color: #d1d2d6;
+      text-align: left;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: color 0.2s ease;
+    }
+
+    .bookmark-card:hover .bookmark-title {
+      color: #ffffff;
+    }
+
+    /* Empty State */
+    .no-bookmarks {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 40px 20px;
+      color: #8c8d93;
+      text-align: center;
+    }
+
+    .no-bookmarks svg {
+      width: 32px;
+      height: 32px;
+      color: #3e3f46;
+      animation: pulse 2s infinite ease-in-out;
+    }
+
+    .no-bookmarks p {
+      font-size: 13px;
+      max-width: 320px;
+      line-height: 1.5;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.6;
+      }
+
+      50% {
+        transform: scale(1.05);
+        opacity: 1;
+        color: #ff8fa3;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 0.6;
+      }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="home-container">
+    <header class="home-header">
+      <h1>Focus Browser</h1>
+      <p class="subtitle">Stay focused, block distractions.</p>
+    </header>
+
+    <main class="bookmarks-section">
+      <div class="section-title">Bookmarks:</div>
+
+      <div id="bookmarks-grid" class="bookmarks-grid"></div>
+
+      <div id="no-bookmarks" class="no-bookmarks hidden">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round">
+          <path
+            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+          </path>
+        </svg>
+        <p>No bookmarks on your home screen yet. Click the heart icon in the address bar on any website to save a
+          bookmark here!</p>
+      </div>
+    </main>
+  </div>
+
+  <!-- Synchronously load window.BOOKMARKS from sandbox-friendly static file -->
+  <script src="bookmarks.js"></script>
+  <script>
+    const grid = document.getElementById('bookmarks-grid');
+    const emptyState = document.getElementById('no-bookmarks');
+    const list = window.BOOKMARKS || [];
+
+    if (list.length === 0) {
+      emptyState.classList.remove('hidden');
+    } else {
+      list.forEach((b) => {
+        const card = document.createElement('a');
+        card.className = 'bookmark-card';
+        card.href = b.url;
+
+        // Dynamic pastel color based on title hash
+        const name = b.title || b.url;
+        const initial = name.trim().replace(/^(https?:\/\/)?(www\.)?/, '').charAt(0).toUpperCase();
+
+        const hash = name.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0);
+        const hue = hash % 360;
+        const iconBg = `hsl(${hue}, 40%, 35%)`;
+
+        card.innerHTML = `
+          <div class="bookmark-icon" style="background: ${iconBg}">${initial}</div>
+          <div class="bookmark-title" title="${name}">${name}</div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+  </script>
+</body>
+
+</html>

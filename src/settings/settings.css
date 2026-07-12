@@ -1,0 +1,578 @@
+/* Focus Browser - Modern Settings Design System */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+  background: #141416;
+  color: #f4f4f7;
+  font-size: 13px;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* Two-pane layout container */
+.settings-container {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* Left sidebar navigation */
+.sidebar {
+  width: 200px;
+  background: #1a1b1e;
+  border-right: 1px solid #28292d;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  padding: 16px 10px;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px 18px;
+  border-bottom: 1px solid #28292d;
+  margin-bottom: 16px;
+}
+
+.header-icon {
+  width: 18px;
+  height: 18px;
+  color: #5b8def;
+}
+
+.sidebar-header h2 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.2px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Tab button styles */
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: #8c8d93;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease-in-out;
+  font-family: inherit;
+  font-size: 12.5px;
+}
+
+.tab-icon {
+  width: 15px;
+  height: 15px;
+  color: inherit;
+  flex-shrink: 0;
+}
+
+.tab-btn span {
+  flex-grow: 1;
+}
+
+.tab-btn:hover {
+  background: #232429;
+  color: #d1d2d6;
+}
+
+.tab-btn.active {
+  background: #2a2b30;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+/* Right Content Area */
+.content-panel {
+  flex-grow: 1;
+  padding: 24px;
+  overflow-y: auto;
+  background: #141416;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Panels switching and animation */
+.panel {
+  display: none;
+}
+
+.panel.active {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: panelFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes panelFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Panel Titles */
+.panel-header {
+  margin-bottom: 4px;
+}
+
+.panel-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.panel-subtitle {
+  font-size: 12px;
+  color: #8c8d93;
+  margin: 0;
+}
+
+/* Cards & containers */
+.card {
+  background: #1a1b1e;
+  border: 1px solid #28292d;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.margin-top {
+  margin-top: 4px;
+}
+
+/* Row elements */
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.toggle-row {
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 13px;
+  color: #f4f4f7;
+}
+
+.toggle-row span {
+  font-weight: 500;
+}
+
+/* Convert checkboxes to premium iOS-style switches */
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 38px;
+  height: 20px;
+  background-color: #2a2b30;
+  border-radius: 20px;
+  position: relative;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  border: 1px solid #33343a;
+  flex-shrink: 0;
+}
+
+input[type="checkbox"]::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #8c8d93;
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease;
+}
+
+input[type="checkbox"]:hover {
+  border-color: #43454c;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #5b8def;
+  border-color: #5b8def;
+}
+
+input[type="checkbox"]:checked::after {
+  transform: translateX(18px);
+  background-color: #ffffff;
+}
+
+/* Hint text */
+.hint {
+  font-size: 11.5px;
+  color: #8c8d93;
+  margin-top: 8px;
+  margin-bottom: 2px;
+  line-height: 1.5;
+}
+
+.hint code {
+  background: #141416;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-family: Consolas, Monaco, monospace;
+  font-size: 11px;
+  border: 1px solid #28292d;
+  color: #e289f2;
+}
+
+/* Field Rows (Label Left, Input Right) */
+.field-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.field-row:last-child {
+  margin-bottom: 0;
+}
+
+.field-row label {
+  color: #d1d2d6;
+  font-weight: 500;
+}
+
+/* Number inputs */
+.field-row input[type="number"] {
+  width: 70px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #28292d;
+  background: #141416;
+  color: #f4f4f7;
+  font-size: 12.5px;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.15s ease-in-out;
+}
+
+.field-row input[type="number"]:focus {
+  border-color: #5b8def;
+}
+
+/* Field Row Stacks (Label Top, Input Bottom) */
+.field-row-stack {
+  margin-bottom: 16px;
+}
+
+.field-row-stack:last-child {
+  margin-bottom: 0;
+}
+
+.field-row-stack label {
+  display: block;
+  color: #d1d2d6;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+
+.field-row-stack input,
+.field-row-stack textarea,
+.field-row-stack select {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #28292d;
+  background: #141416;
+  color: #f4f4f7;
+  font-size: 12.5px;
+  font-family: inherit;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.field-row-stack input[type="password"] {
+  letter-spacing: 0.125em;
+}
+
+.field-row-stack textarea {
+  font-family: "Cascadia Code", Consolas, Monaco, monospace;
+}
+
+.field-row-stack input:focus,
+.field-row-stack textarea:focus,
+.field-row-stack select:focus {
+  border-color: #5b8def;
+  box-shadow: 0 0 0 2px rgba(91, 141, 239, 0.15);
+}
+
+/* List Block headers inside cards */
+.list-block h2 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+/* Custom Add Row Input/Buttons */
+.add-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+
+.add-row input {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #28292d;
+  background: #141416;
+  color: #f4f4f7;
+  font-size: 12.5px;
+  outline: none;
+  transition: border-color 0.15s ease-in-out;
+}
+
+.add-row input:focus {
+  border-color: #5b8def;
+}
+
+/* Premium Button Styling */
+button {
+  font-family: inherit;
+  border: none;
+  border-radius: 6px;
+  background: #2a2b30;
+  color: #e4e4e7;
+  cursor: pointer;
+  font-size: 12.5px;
+  font-weight: 500;
+  transition: all 0.15s ease-in-out;
+}
+
+button:hover {
+  background: #35373e;
+  color: #ffffff;
+}
+
+button:active {
+  background: #202124;
+}
+
+.add-row button {
+  padding: 0 16px;
+}
+
+/* Primary/Save button design */
+#profile-save-btn, #block-add-btn, #allow-add-btn {
+  background: #5b8def;
+  color: #ffffff;
+}
+
+#profile-save-btn:hover, #block-add-btn:hover, #allow-add-btn:hover {
+  background: #6a9bfc;
+}
+
+#profile-save-btn:active, #block-add-btn:active, #allow-add-btn:active {
+  background: #4d7cd6;
+}
+
+.add-row button.secondary {
+  background: transparent;
+  color: #8c8d93;
+  border: 1px solid #28292d;
+}
+
+.add-row button.secondary:hover {
+  background: #232429;
+  color: #ffffff;
+  border-color: #43454c;
+}
+
+/* Browse button */
+#profile-cwd-browse-btn {
+  padding: 0 14px;
+  white-space: nowrap;
+}
+
+#profile-cwd {
+  color: #8c8d93;
+  cursor: default;
+}
+
+/* Custom lists */
+.pattern-list, .profile-list {
+  list-style: none;
+  max-height: 180px;
+  overflow-y: auto;
+  background: #141416;
+  border: 1px solid #28292d;
+  border-radius: 6px;
+  margin-top: 10px;
+}
+
+.pattern-list li, .profile-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 1px solid #1a1b1e;
+  font-size: 12.5px;
+  color: #d1d2d6;
+}
+
+.pattern-list li:last-child, .profile-list li:last-child {
+  border-bottom: none;
+}
+
+.pattern-list li:hover, .profile-list li:hover {
+  background: #1a1b1e;
+}
+
+/* Action/Delete buttons in lists */
+.pattern-list li button {
+  width: 22px;
+  height: 22px;
+  font-size: 10px;
+  color: #8c8d93;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pattern-list li button:hover {
+  background: #e06c75;
+  color: #ffffff;
+}
+
+.profile-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.profile-meta {
+  font-size: 11px;
+  color: #8c8d93;
+  margin-top: 3px;
+}
+
+.profile-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.profile-actions button {
+  font-size: 11.5px;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.profile-actions button:last-child {
+  background: transparent;
+  color: #8c8d93;
+}
+
+.profile-actions button:last-child:hover {
+  background: #e06c75;
+  color: #ffffff;
+}
+
+/* Toolbar Panel Specific Grid Layout */
+.toolbar-checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.toolbar-checkboxes .toggle-row {
+  padding: 6px 0;
+  border-bottom: 1px solid #232429;
+}
+
+.toolbar-checkboxes .toggle-row:last-child {
+  border-bottom: none;
+}
+
+/* Scrollbar customization */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2a2b30;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #35373e;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Downloads Styles */
+.download-progress-bar {
+  background: #2a2b30;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 5px;
+  width: 100%;
+}
+
+.download-progress-fill {
+  background: #5b8def;
+  height: 100%;
+  width: 0%;
+  transition: width 0.1s ease;
+}
+
+.download-details {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  margin-right: 15px;
+}
+
+.download-info-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #8c8d93;
+  margin-top: 4px;
+}
+

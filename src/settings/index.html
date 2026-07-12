@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Settings</title>
+  <link rel="stylesheet" href="settings.css" />
+</head>
+<body>
+  <div class="settings-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        <span>Settings</span>
+      </div>
+      <nav id="tabs" class="sidebar-nav">
+        <button class="tab-btn active" data-tab="aichat">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <span>AI Chat</span>
+        </button>
+        <button class="tab-btn" data-tab="focus">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <circle cx="12" cy="12" r="6"></circle>
+            <circle cx="12" cy="12" r="2"></circle>
+          </svg>
+          <span>Focus Mode</span>
+        </button>
+        <button class="tab-btn" data-tab="pomodoro">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          <span>Pomodoro</span>
+        </button>
+        <button class="tab-btn" data-tab="bookmarks">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          <span>Bookmarks</span>
+        </button>
+        <button class="tab-btn" data-tab="blocking">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+          </svg>
+          <span>Site Blocking</span>
+        </button>
+        <button class="tab-btn" data-tab="launcher">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+          <span>Launcher</span>
+        </button>
+        <button class="tab-btn" data-tab="tabs">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="3" y1="9" x2="21" y2="9"></line>
+            <line x1="9" y1="21" x2="9" y2="9"></line>
+          </svg>
+          <span>Tabs</span>
+        </button>
+        <button class="tab-btn" data-tab="toolbar">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="21" x2="4" y2="14"></line>
+            <line x1="4" y1="10" x2="4" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12" y2="3"></line>
+            <line x1="20" y1="21" x2="20" y2="16"></line>
+            <line x1="20" y1="12" x2="20" y2="3"></line>
+            <line x1="1" y1="14" x2="7" y2="14"></line>
+            <line x1="9" y1="8" x2="15" y2="8"></line>
+            <line x1="17" y1="16" x2="23" y2="16"></line>
+          </svg>
+          <span>Toolbar</span>
+        </button>
+        <button class="tab-btn" data-tab="downloads">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Downloads</span>
+        </button>
+        <button class="tab-btn" data-tab="passwords">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span>Passwords</span>
+        </button>
+        <button class="tab-btn" data-tab="privacy">
+          <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          <span>Privacy & Data</span>
+        </button>
+      </nav>
+    </aside>
+
+    <main class="content-panel">
+      <!-- 1. AI Chat Panel -->
+      <section id="panel-aichat" class="panel active">
+        <div class="panel-header">
+          <h2>AI Chat Settings</h2>
+          <p class="panel-subtitle">Configure your default AI provider and credentials for the built-in sidebar assistant.</p>
+        </div>
+        
+        <div class="card">
+          <div class="field-row-stack">
+            <label for="ai-provider">Provider</label>
+            <select id="ai-provider">
+              <option value="anthropic">Anthropic (Claude)</option>
+              <option value="openai">OpenAI</option>
+              <option value="gemini">Google (Gemini)</option>
+              <option value="other">Other / custom</option>
+            </select>
+          </div>
+          <div class="field-row-stack">
+            <label for="ai-api-key">API key</label>
+            <input type="password" id="ai-api-key" placeholder="sk-..." autocomplete="off" />
+          </div>
+          <div class="field-row-stack">
+            <label for="ai-model">Model (optional)</label>
+            <input type="text" id="ai-model" placeholder="e.g. gemini-2.5-flash" />
+          </div>
+        </div>
+        <p class="hint">Stored locally in this app's own settings file only, never sent anywhere but the provider you pick above.</p>
+
+        <div class="card">
+          <label class="row toggle-row">
+            <input type="checkbox" id="ai-agentic-toggle" />
+            <span>Enable agentic browser tools</span>
+          </label>
+        </div>
+        <p class="hint">Lets FocusCompanion run scripted clicks/form-fills on tabs you already have open, and run multi-step tasks in the background. These scripts have the same access to a page as your own browsing session &mdash; only enable this if you trust the model and the tasks you're asking it to run. Off by default.</p>
+
+        <div class="card">
+          <label class="row toggle-row">
+            <input type="checkbox" id="ai-productivity-toggle" />
+            <span>Productivity check-ins every 5 minutes</span>
+          </label>
+        </div>
+        <p class="hint">While a Pomodoro work session is running, sends that session's Activity Log to the AI every 5 minutes and shows a gentle nudge (toast + notification) if it looks like you've drifted. It can't block sites or end your session on its own &mdash; just a nudge. Off by default.</p>
+      </section>
+
+      <!-- 2. Focus Mode Panel -->
+      <section id="panel-focus" class="panel">
+        <div class="panel-header">
+          <h2>Focus Mode</h2>
+          <p class="panel-subtitle">Minimize distractions and prevent tab clutter during focused work.</p>
+        </div>
+
+        <div class="card">
+          <label class="row toggle-row">
+            <input type="checkbox" id="focus-enabled-toggle" />
+            <span>Focus Mode enabled</span>
+          </label>
+          <p class="hint">Hides the Group button and (optionally) nudges you when you've opened too many tabs. Doesn't block anything on its own &mdash; pair it with Site Blocking for that.</p>
+
+          <div class="field-row">
+            <label for="tab-limit">Tab limit (0 = no limit)</label>
+            <input type="number" id="tab-limit" min="0" max="50" />
+          </div>
+          <p class="hint">A gentle nudge only, not a hard block &mdash; you'll still be able to open more tabs.</p>
+        </div>
+      </section>
+
+      <!-- 3. Pomodoro Panel -->
+      <section id="panel-pomodoro" class="panel">
+        <div class="panel-header">
+          <h2>Pomodoro Timer</h2>
+          <p class="panel-subtitle">Manage work intervals and breaks to optimize your energy levels.</p>
+        </div>
+
+        <div class="card">
+          <div class="field-row">
+            <label for="work-min">Work session (minutes)</label>
+            <input type="number" id="work-min" min="1" max="180" />
+          </div>
+          <div class="field-row">
+            <label for="short-break-min">Short break (minutes)</label>
+            <input type="number" id="short-break-min" min="1" max="60" />
+          </div>
+          <div class="field-row">
+            <label for="long-break-min">Long break (minutes)</label>
+            <input type="number" id="long-break-min" min="1" max="120" />
+          </div>
+          <div class="field-row">
+            <label for="cycles">Work sessions before a long break</label>
+            <input type="number" id="cycles" min="1" max="12" />
+          </div>
+          <p class="hint">Changes apply immediately. A running timer keeps its current countdown; only the next phase picks up new durations.</p>
+        </div>
+
+        <div class="card margin-top">
+          <label class="row toggle-row">
+            <input type="checkbox" id="auto-focus-toggle" />
+            <span>Auto-enable Focus Mode + blocking during work sessions</span>
+          </label>
+          <p class="hint">Turns both on when a work session starts, then restores whatever you had before &mdash; not just "off" &mdash; when the break begins.</p>
+        </div>
+      </section>
+
+      <!-- 4. Bookmarks Panel -->
+      <section id="panel-bookmarks" class="panel">
+        <div class="panel-header">
+          <h2>Manage Bookmarks</h2>
+          <p class="panel-subtitle">View and delete pages bookmarked on your home screen.</p>
+        </div>
+
+        <div class="card" style="display: flex; gap: 10px; margin-bottom: 20px;">
+          <button id="bookmarks-import-btn" class="secondary" style="flex: 1;">Import Bookmarks HTML...</button>
+          <button id="bookmarks-export-btn" class="secondary" style="flex: 1;">Export Bookmarks HTML...</button>
+        </div>
+
+        <div class="list-block card">
+          <h2>Bookmarks</h2>
+          <p class="hint">Click the cross to delete any bookmark from your new tab home screen.</p>
+          <ul id="bookmarks-list" class="profile-list"></ul>
+          <div id="no-bookmarks-settings" class="no-bookmarks-settings">
+            <p class="hint" style="text-align: center; padding: 20px 0;">No bookmarks saved. Click the heart icon in the address bar on any website to bookmark it.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Site Blocking Panel -->
+      <section id="panel-blocking" class="panel">
+        <div class="panel-header">
+          <h2>Site Blocking</h2>
+          <p class="panel-subtitle">Control access to distracting websites with robust blocklists and allowlists.</p>
+        </div>
+
+        <div class="card">
+          <label class="row toggle-row">
+            <input type="checkbox" id="enabled-toggle" />
+            <span>Blocking enabled</span>
+          </label>
+        </div>
+
+        <div class="list-block card margin-top">
+          <h2>Blocklist</h2>
+          <p class="hint">Domains to block, e.g. <code>facebook.com</code> or <code>*.tumblr.com</code>. Subdomains are blocked automatically.</p>
+          <div class="add-row">
+            <input type="text" id="block-input" placeholder="example.com" />
+            <button id="block-add-btn">Add</button>
+          </div>
+          <ul id="block-list" class="pattern-list"></ul>
+        </div>
+
+        <div class="list-block card margin-top">
+          <h2>Allowlist</h2>
+          <p class="hint">Always wins over the blocklist &mdash; use for exceptions.</p>
+          <div class="add-row">
+            <input type="text" id="allow-input" placeholder="example.com" />
+            <button id="allow-add-btn">Add</button>
+          </div>
+          <ul id="allow-list" class="pattern-list"></ul>
+        </div>
+      </section>
+
+      <!-- 5. Launcher Panel -->
+      <section id="panel-launcher" class="panel">
+        <div class="panel-header">
+          <h2>Launcher Profiles</h2>
+          <p class="panel-subtitle">Create profiles to open browser tabs and run dev environment shell commands.</p>
+        </div>
+
+        <div class="list-block card">
+          <h2>Profiles</h2>
+          <p class="hint">Each profile opens a set of URLs as tabs and runs local commands (e.g. <code>code .</code>) when launched.</p>
+          <ul id="profile-list" class="profile-list"></ul>
+        </div>
+
+        <div class="list-block card margin-top">
+          <h2 id="profile-form-title">New profile</h2>
+          <div class="field-row-stack">
+            <label for="profile-name">Name</label>
+            <input type="text" id="profile-name" placeholder="e.g. Client Work" />
+          </div>
+          <div class="field-row-stack">
+            <label for="profile-urls">URLs (one per line)</label>
+            <textarea id="profile-urls" rows="3" placeholder="https://github.com/me/project"></textarea>
+          </div>
+          <div class="field-row-stack">
+            <label for="profile-commands">Commands (one per line)</label>
+            <textarea id="profile-commands" rows="3" placeholder="code ."></textarea>
+          </div>
+          <div class="field-row-stack">
+            <label for="profile-cwd">Working directory</label>
+            <div class="add-row">
+              <input type="text" id="profile-cwd" placeholder="Home directory (default)" readonly />
+              <button id="profile-cwd-browse-btn">Browse&hellip;</button>
+            </div>
+            <p class="hint">Commands run as if typed from here &mdash; e.g. <code>code .</code> opens this folder.</p>
+          </div>
+          <div class="add-row">
+            <button id="profile-save-btn">Save profile</button>
+            <button id="profile-cancel-btn" class="secondary hidden">Cancel edit</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Tabs Panel -->
+      <section id="panel-tabs" class="panel">
+        <div class="panel-header">
+          <h2>Tab Management</h2>
+          <p class="panel-subtitle">Configure auto-freezing and memory optimization features.</p>
+        </div>
+
+        <div class="card">
+          <label class="row toggle-row">
+            <input type="checkbox" id="freeze-enabled-toggle" />
+            <span>Freeze inactive tabs to save memory</span>
+          </label>
+          <p class="hint">Destroys a background tab's renderer process entirely after it's been inactive &mdash; not just backgrounded, actually gone &mdash; and rebuilds it (restoring the URL and scroll position) the instant you click back to it.</p>
+
+          <div class="field-row">
+            <label for="freeze-after-min">Freeze after (minutes)</label>
+            <input type="number" id="freeze-after-min" min="1" max="120" />
+          </div>
+          <p class="hint">The active tab is never frozen. Right-click any background tab to freeze it immediately instead of waiting. A frozen tab playing audio or mid-upload will have that killed along with everything else in it &mdash; that's inherent to actually destroying the process, not a bug.</p>
+        </div>
+      </section>
+
+      <!-- 7. Toolbar Panel -->
+      <section id="panel-toolbar" class="panel">
+        <div class="panel-header">
+          <h2>Toolbar Buttons</h2>
+          <p class="panel-subtitle">Choose which buttons appear on your main browser toolbar.</p>
+        </div>
+
+        <div class="card">
+          <p class="hint">Hide optional toolbar buttons you don't use. Settings and Workspace always stay visible &mdash; Settings is how you'd get back in here if everything else were hidden, and Workspace was asked to stay put.</p>
+          <div class="toolbar-checkboxes">
+            <label class="row toggle-row"><input type="checkbox" id="tb-reader" /><span>Reader view</span></label>
+            <label class="row toggle-row"><input type="checkbox" id="tb-group" /><span>Group</span></label>
+            <label class="row toggle-row"><input type="checkbox" id="tb-focusMode" /><span>Focus Mode</span></label>
+            <label class="row toggle-row"><input type="checkbox" id="tb-pomodoro" /><span>Pomodoro timer</span></label>
+            <label class="row toggle-row"><input type="checkbox" id="tb-launcher" /><span>Launcher</span></label>
+            <label class="row toggle-row"><input type="checkbox" id="tb-dashboard" /><span>Usage dashboard</span></label>
+            <label class="row toggle-row"><input type="checkbox" id="tb-aiChat" /><span>AI Chat</span></label>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8. Downloads Panel -->
+      <section id="panel-downloads" class="panel">
+        <div class="panel-header">
+          <h2>Downloads</h2>
+          <p class="panel-subtitle">Manage your active and completed file downloads.</p>
+        </div>
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+          <span class="hint">Clear past downloads from settings history.</span>
+          <button id="downloads-clear-btn" class="secondary">Clear History</button>
+        </div>
+        <div class="list-block card margin-top">
+          <ul id="downloads-list" class="profile-list"></ul>
+          <div id="no-downloads" class="no-bookmarks-settings">
+            <p class="hint" style="text-align: center; padding: 20px 0;">No downloads found.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9. Passwords Panel -->
+      <section id="panel-passwords" class="panel">
+        <div class="panel-header">
+          <h2>Password Manager</h2>
+          <p class="panel-subtitle">Securely store and generate passwords for your online accounts.</p>
+        </div>
+        <div class="card">
+          <h2>Add Login</h2>
+          <div class="field-row-stack" style="margin-top: 10px;">
+            <label for="pwd-host">Website URL / Domain</label>
+            <input type="text" id="pwd-host" placeholder="example.com" />
+          </div>
+          <div class="field-row-stack" style="margin-top: 10px;">
+            <label for="pwd-username">Username / Email</label>
+            <input type="text" id="pwd-username" placeholder="Username / Email" />
+          </div>
+          <div class="field-row-stack" style="margin-top: 10px;">
+            <label for="pwd-password">Password</label>
+            <div style="display: flex; gap: 10px;">
+              <input type="password" id="pwd-password" placeholder="Password" style="flex: 1;" />
+              <button id="pwd-generate-btn" class="secondary">Generate</button>
+            </div>
+          </div>
+          <div class="add-row" style="margin-top: 15px;">
+            <button id="pwd-save-btn">Save Credential</button>
+          </div>
+        </div>
+        <div class="list-block card margin-top">
+          <h2>Saved Logins</h2>
+          <div class="add-row" style="margin-top: 10px;">
+            <input type="text" id="pwd-search" placeholder="Search logins..." />
+          </div>
+          <ul id="passwords-list" class="profile-list"></ul>
+        </div>
+      </section>
+
+      <!-- 10. Privacy & Data Panel -->
+      <section id="panel-privacy" class="panel">
+        <div class="panel-header">
+          <h2>Privacy & Site Data</h2>
+          <p class="panel-subtitle">Manage cookies, local storage, search engine, and website permissions.</p>
+        </div>
+        
+        <!-- Search Engine card -->
+        <div class="card" style="margin-bottom: 20px;">
+          <h2>Search Engine</h2>
+          <p class="hint">Choose your default search engine and toggle live address bar suggestions.</p>
+          <div class="field-row-stack" style="margin-top: 10px;">
+            <label for="search-engine">Default Search Engine</label>
+            <select id="search-engine">
+              <option value="google">Google</option>
+              <option value="bing">Bing</option>
+              <option value="duckduckgo">DuckDuckGo</option>
+              <option value="custom">Custom Engine...</option>
+            </select>
+          </div>
+          <div id="search-engine-custom-row" class="field-row-stack hidden" style="margin-top: 10px;">
+            <label for="search-engine-custom">Custom Search URL (use %s for query)</label>
+            <input type="text" id="search-engine-custom" placeholder="https://example.com/search?q=%s" />
+          </div>
+          <label class="row toggle-row" style="margin-top: 15px;">
+            <input type="checkbox" id="search-suggestions-toggle" />
+            <span>Enable live suggestions in address bar</span>
+          </label>
+        </div>
+
+        <div class="list-block card">
+          <h2>Cookies by Website</h2>
+          <p class="hint">Clear cookies and local data for individual websites.</p>
+          <ul id="cookies-list" class="profile-list"></ul>
+          <div id="no-cookies" class="no-bookmarks-settings">
+            <p class="hint" style="text-align: center; padding: 20px 0;">No site data or cookies stored.</p>
+          </div>
+        </div>
+        <div class="list-block card margin-top">
+          <h2>Site Permissions</h2>
+          <p class="hint">Camera, microphone, and geolocation permissions.</p>
+          <ul id="permissions-list" class="profile-list"></ul>
+          <div id="no-permissions" class="no-bookmarks-settings">
+            <p class="hint" style="text-align: center; padding: 20px 0;">No custom site permissions saved.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="settings.js"></script>
+</body>
+</html>

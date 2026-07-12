@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>FocusCompanion</title>
+  <link rel="stylesheet" href="aiChat.css" />
+</head>
+<body>
+  <div id="header">
+    <div id="header-title">FocusCompanion</div>
+    <button id="clear-btn" title="Clear conversation">&#8635;</button>
+    <div id="width-controls">
+      <button id="width-shrink-btn" title="Narrower">&#8722;</button>
+      <button id="width-grow-btn" title="Wider">&#43;</button>
+    </div>
+  </div>
+  <div id="not-configured-banner" class="hidden">
+    No API key set. Add one in Settings &rarr; AI Chat.
+  </div>
+  <div id="messages"></div>
+  <div id="input-row">
+    <textarea id="chat-input" rows="2" placeholder="Ask FocusCompanion…"></textarea>
+    <div id="send-controls">
+      <button id="send-btn">Send</button>
+      <button id="macro-btn" title="Run this as a multi-step task in the background">Run in background</button>
+    </div>
+  </div>
+  <script src="aiChat.js"></script>
+</body>
+</html>

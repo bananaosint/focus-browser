@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Workspace</title>
+  <link rel="stylesheet" href="workspace.css" />
+</head>
+<body>
+  <div id="header">
+    <button id="open-folder-btn" title="Open folder">Open Folder</button>
+    <div id="folder-name"></div>
+    <button id="explorer-toggle-btn" title="Collapse/expand file tree">
+      <span id="explorer-chevron">&#9662;</span>
+    </button>
+    <div id="width-controls">
+      <button id="width-shrink-btn" title="Narrower">&#8722;</button>
+      <button id="width-grow-btn" title="Wider">&#43;</button>
+    </div>
+  </div>
+  <div id="tree"></div>
+  <div id="editor-pane">
+    <div id="editor-header">
+      <span id="file-name">No file open</span>
+      <span id="dirty-dot" class="hidden" title="Unsaved changes">&#9679;</span>
+      <button id="save-btn" title="Save (Ctrl+S)">Save</button>
+    </div>
+    <textarea id="editor" spellcheck="false" disabled placeholder="Select a file to edit"></textarea>
+  </div>
+  <div id="error-banner" class="hidden"></div>
+  <div id="resize-handle" title="Drag to resize"></div>
+  <script src="workspace.js"></script>
+</body>
+</html>

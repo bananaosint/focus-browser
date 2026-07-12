@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Blocked by Focus Browser</title>
+  <link rel="stylesheet" href="blocked.css" />
+</head>
+<body>
+  <div class="glass-card">
+    <div class="shield-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+      </svg>
+    </div>
+    
+    <h1>Take a deep breath...</h1>
+    <p class="blocked-message">
+      You blocked <span id="host" class="host-badge"></span> to keep yourself focused.
+    </p>
+    
+    <div class="actions-group">
+      <a id="safety-btn" href="newtab.html" class="btn btn-primary">Return to Safety</a>
+      <button id="show-override-btn" class="btn btn-secondary-link">I really need to access this site</button>
+    </div>
+
+    <!-- Hidden Override Panel -->
+    <div id="override-panel" class="override-panel hidden">
+      <div class="divider"></div>
+      
+      <!-- Step 1: Guided Breathing -->
+      <div class="step-section" id="step-breathing">
+        <h3>Step 1: Disrupt Autopilot</h3>
+        <p class="step-desc">Complete a quick 10-second breathing exercise to clear your mind.</p>
+        
+        <div class="breathing-space">
+          <div id="breath-circle" class="breath-circle"></div>
+          <div id="breath-label" class="breath-label">10s Challenge</div>
+        </div>
+        
+        <button id="start-breath-btn" class="btn btn-secondary">Start Breathing Exercise</button>
+      </div>
+
+      <!-- Step 2: Intent & Duration (hidden until breath done) -->
+      <div class="step-section disabled-step" id="step-intent">
+        <h3>Step 2: State Your Intent</h3>
+        <p class="step-desc">Why do you need to visit this domain right now?</p>
+        
+        <textarea id="intent-input" placeholder="Explain your reason (e.g. searching for a API library tutorial)..." disabled autocomplete="off"></textarea>
+        
+        <div id="status-banner" class="status-banner hidden"></div>
+        
+        <div class="duration-section">
+          <label>For how long?</label>
+          <div class="segmented-control">
+            <button class="segment-btn active" data-minutes="5">5 min</button>
+            <button class="segment-btn" data-minutes="15">15 min</button>
+            <button class="segment-btn" data-minutes="30">30 min</button>
+          </div>
+        </div>
+        
+        <button id="continue-btn" class="btn btn-danger" disabled>Override Block</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="blocked.js"></script>
+</body>
+</html>
