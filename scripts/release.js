@@ -9,7 +9,8 @@ const tag = `v${pkg.version}`
 
 function run(cmd, args, opts = {}) {
   console.log(`> ${cmd} ${args.join(' ')}`)
-  execFileSync(cmd, args, { cwd: root, stdio: 'inherit', shell: process.platform === 'win32', ...opts })
+  const useShell = cmd === 'npm' && process.platform === 'win32'
+  execFileSync(cmd, args, { cwd: root, stdio: 'inherit', shell: useShell, ...opts })
 }
 
 // 1. Build both Windows targets (nsis installer + portable exe)
