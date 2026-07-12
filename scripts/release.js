@@ -13,25 +13,28 @@ function run(cmd, args, opts = {}) {
   execFileSync(cmd, args, { cwd: root, stdio: 'inherit', shell: useShell, ...opts })
 }
 
-// 1. Build both Windows targets (nsis installer + portable exe)
+// 1. Build both Windows and macOS targets
 run('npm', ['run', 'dist'])
 
-// electron-builder doesn't glob-expand for us and cmd.exe doesn't either,
-// so find the built exes ourselves instead of passing dist/*.exe through
+// Collect all installer files (.exe, .dmg, .zip)
+// electron-builder creates these based on the platform and config
 const assets = fs.readdirSync(distDir)
-  .filter((f) => f.endsWith('.exe'))
+  .filter((f) => f.endsWith('.exe') || f.endsWith('.dmg') || f.endsWith('.zip'))
   .map((f) => path.join(distDir, f))
 
 if (assets.length === 0) {
-  throw new Error(`No .exe files found in ${distDir} after build`)
+  throw new Error(`No installer files found in ${distDir} after build`)
 }
+
+console.log(`\nBuilt installers:`)
+assets.forEach((a) => console.log(`  - ${path.basename(a)}`))
 
 // 2. Tag + push
 run('git', ['tag', tag])
 run('git', ['push'])
 run('git', ['push', 'origin', tag])
 
-// 3. Publish the GitHub release with the built exes attached
+// 3. Publish the GitHub release with all installers attached
 run('gh', ['release', 'create', tag, ...assets, '--title', tag, '--generate-notes'])
 
 console.log(`\nReleased ${tag} — https://github.com/bananaosint/focus-browser/releases/tag/${tag}`)
