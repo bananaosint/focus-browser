@@ -1,6 +1,6 @@
 {
   "name": "focus-browser",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "private": true,
   "description": "Minimalist, strictly-local focus browser (Windows)",
   "main": "src/main/main.js",
