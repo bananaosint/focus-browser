@@ -1,15 +1,29 @@
+/* Theme tokens set inline in blocked.html before paint; fallbacks are Night
+   lofi dark. Semantic colors (danger red, approved green) stay fixed — they
+   signal state, not theme. */
+:root {
+  --fb-bg: #211d1a;
+  --fb-surface: #2a2521;
+  --fb-text: #ece6df;
+  --fb-muted: #a89f92;
+  --fb-border: #3a332c;
+  --fb-accent: #d98b6b;
+  --fb-accent-soft: #d98b6b22;
+  --fb-font-sans: -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fb-font-mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, sans-serif;
+  font-family: var(--fb-font-sans);
 }
 
 html, body {
   height: 100%;
-  background: #0f0f11;
-  background-image: radial-gradient(circle at top, #18181f 0%, #0d0d10 100%);
-  color: #f4f4f7;
+  background: var(--fb-bg);
+  color: var(--fb-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -20,12 +34,11 @@ html, body {
 .glass-card {
   width: 100%;
   max-width: 460px;
-  background: rgba(26, 26, 32, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--fb-surface);
+  border: 1px solid var(--fb-border);
   border-radius: 16px;
   padding: 32px;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(20px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -35,7 +48,7 @@ html, body {
 .shield-icon {
   width: 48px;
   height: 48px;
-  color: #5b8def;
+  color: var(--fb-accent);
   margin-bottom: 16px;
   display: flex;
   align-items: center;
@@ -47,25 +60,24 @@ h1 {
   font-weight: 600;
   letter-spacing: -0.5px;
   margin-bottom: 8px;
-  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  font-family: var(--fb-font-serif, Georgia, serif);
+  color: var(--fb-text);
 }
 
 .blocked-message {
   font-size: 13.5px;
-  color: #8e909d;
+  color: var(--fb-muted);
   margin-bottom: 24px;
   line-height: 1.5;
 }
 
 .host-badge {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--fb-accent-soft);
+  border: 1px solid var(--fb-border);
   padding: 2px 8px;
   border-radius: 20px;
-  color: #f4f4f7;
-  font-family: monospace;
+  color: var(--fb-text);
+  font-family: var(--fb-font-mono);
   font-weight: bold;
   word-break: break-all;
 }
@@ -78,7 +90,6 @@ h1 {
   align-items: center;
 }
 
-/* Premium Buttons */
 .btn {
   font-size: 12.5px;
   font-weight: 600;
@@ -95,37 +106,35 @@ h1 {
 }
 
 .btn-primary {
-  background: #5b8def;
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(91, 141, 239, 0.2);
+  background: var(--fb-accent);
+  color: #fff;
 }
 
 .btn-primary:hover {
-  background: #6a9bfc;
+  filter: brightness(1.08);
   transform: translateY(-1px);
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.03);
-  color: #e4e4e7;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--fb-accent-soft);
+  color: var(--fb-text);
+  border: 1px solid var(--fb-border);
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--fb-accent);
 }
 
 .btn-secondary-link {
   background: transparent;
-  color: #8e909d;
+  color: var(--fb-muted);
   font-size: 12px;
   padding: 6px 12px;
   width: auto;
 }
 
 .btn-secondary-link:hover {
-  color: #ff8fa3;
+  color: var(--fb-accent);
 }
 
 .btn-danger {
@@ -146,15 +155,13 @@ h1 {
   box-shadow: none !important;
 }
 
-/* Divider styling */
 .divider {
   width: 100%;
   height: 1px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--fb-border);
   margin: 20px 0;
 }
 
-/* Override Panel */
 .override-panel {
   width: 100%;
   display: flex;
@@ -183,19 +190,18 @@ h1 {
 .step-section h3 {
   font-size: 13.5px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--fb-text);
   margin-bottom: 4px;
   width: 100%;
 }
 
 .step-desc {
   font-size: 11.5px;
-  color: #8e909d;
+  color: var(--fb-muted);
   margin-bottom: 16px;
   width: 100%;
 }
 
-/* Breathing Challenge */
 .breathing-space {
   position: relative;
   width: 130px;
@@ -204,65 +210,58 @@ h1 {
   align-items: center;
   justify-content: center;
   margin-bottom: 16px;
-  background: rgba(255, 255, 255, 0.01);
   border-radius: 50%;
-  border: 1px dashed rgba(255, 255, 255, 0.03);
+  border: 1px dashed var(--fb-border);
 }
 
 .breath-circle {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(91, 141, 239, 0.3) 0%, rgba(91, 141, 239, 0.05) 100%);
-  border: 1px solid rgba(91, 141, 239, 0.6);
-  box-shadow: 0 0 15px rgba(91, 141, 239, 0.3);
+  background: var(--fb-accent-soft);
+  border: 1px solid var(--fb-accent);
   transition: all 2s ease-in-out;
 }
 
-/* Inhale state (JS class) */
 .breath-circle.inhale {
   width: 110px;
   height: 110px;
-  background: radial-gradient(circle, rgba(255, 143, 163, 0.3) 0%, rgba(255, 143, 163, 0.05) 100%);
-  border-color: rgba(255, 143, 163, 0.6);
-  box-shadow: 0 0 25px rgba(255, 143, 163, 0.4);
+  filter: brightness(1.15);
 }
 
 .breath-label {
   position: absolute;
-  font-family: monospace;
+  font-family: var(--fb-font-mono);
   font-size: 11px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--fb-text);
   pointer-events: none;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
-/* Textarea input */
 textarea {
   width: 100%;
   height: 60px;
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: var(--fb-bg);
+  border: 1px solid var(--fb-border);
   border-radius: 8px;
-  color: #f4f4f7;
+  color: var(--fb-text);
   font-size: 12.5px;
   padding: 8px 12px;
   outline: none;
   resize: none;
   margin-bottom: 16px;
   transition: border-color 0.2s ease;
+  font-family: var(--fb-font-sans);
 }
 
 textarea:focus {
-  border-color: #ff8fa3;
+  border-color: var(--fb-accent);
 }
 
 textarea:disabled {
   opacity: 0.5;
 }
 
-/* Duration Select Controls */
 .duration-section {
   width: 100%;
   display: flex;
@@ -273,14 +272,14 @@ textarea:disabled {
 
 .duration-section label {
   font-size: 12.5px;
-  color: #d1d2d6;
+  color: var(--fb-text);
   font-weight: 500;
 }
 
 .segmented-control {
   display: flex;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--fb-bg);
+  border: 1px solid var(--fb-border);
   border-radius: 8px;
   padding: 2px;
 }
@@ -288,7 +287,7 @@ textarea:disabled {
 .segment-btn {
   background: transparent;
   border: none;
-  color: #8e909d;
+  color: var(--fb-muted);
   font-size: 11px;
   font-weight: 600;
   padding: 6px 12px;
@@ -298,16 +297,14 @@ textarea:disabled {
 }
 
 .segment-btn:hover:not(.active) {
-  color: #ffffff;
+  color: var(--fb-text);
 }
 
 .segment-btn.active {
-  background: rgba(255, 255, 255, 0.06);
-  color: #ffffff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  background: var(--fb-accent-soft);
+  color: var(--fb-accent);
 }
 
-/* Status Banner */
 .status-banner {
   width: 100%;
   font-size: 12px;
@@ -345,4 +342,3 @@ textarea:disabled {
     transform: translateY(0);
   }
 }
-

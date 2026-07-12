@@ -515,3 +515,11 @@ document.addEventListener('DOMContentLoaded', () => {
     else if (activeTab === 'activity') renderActivityLog()
   }, REFRESH_MS)
 })
+
+// ---- theme + icons ----
+window.addEventListener('DOMContentLoaded', () => {
+  window.FocusIcons.hydrate(document)
+  const applyDashTheme = (t) => { if (t) window.FocusTheme.applyTheme(t.palette, t.mode) }
+  window.dashboardAPI.getTheme().then(applyDashTheme)
+  window.dashboardAPI.onThemeChanged(applyDashTheme)
+})

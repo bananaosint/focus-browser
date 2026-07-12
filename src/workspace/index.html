@@ -13,21 +13,24 @@
       <span id="explorer-chevron">&#9662;</span>
     </button>
     <div id="width-controls">
-      <button id="width-shrink-btn" title="Narrower">&#8722;</button>
-      <button id="width-grow-btn" title="Wider">&#43;</button>
+      <button id="width-shrink-btn" title="Narrower" aria-label="Narrower" data-icon="minus" data-icon-size="14"></button>
+      <button id="width-grow-btn" title="Wider" aria-label="Wider" data-icon="plus" data-icon-size="14"></button>
     </div>
   </div>
   <div id="tree"></div>
   <div id="editor-pane">
     <div id="editor-header">
       <span id="file-name">No file open</span>
-      <span id="dirty-dot" class="hidden" title="Unsaved changes">&#9679;</span>
+      <span id="dirty-dot" class="hidden" title="Unsaved changes"></span>
       <button id="save-btn" title="Save (Ctrl+S)">Save</button>
     </div>
     <textarea id="editor" spellcheck="false" disabled placeholder="Select a file to edit"></textarea>
   </div>
   <div id="error-banner" class="hidden"></div>
   <div id="resize-handle" title="Drag to resize"></div>
+  <script src="../theme/palettes.js"></script>
+  <script src="../theme/applyTheme.js"></script>
+  <script src="../theme/icons.js"></script>
   <script src="workspace.js"></script>
 </body>
 </html>

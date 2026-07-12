@@ -117,5 +117,36 @@ contextBridge.exposeInMainWorld('settingsAPI', {
     const listener = (_e, state) => callback(state)
     ipcRenderer.on('searchSettings:state', listener)
     return () => ipcRenderer.removeListener('searchSettings:state', listener)
-  }
+  },
+
+  // Theme (Appearance panel). getTheme = resolved (for applying to this
+  // window); getRawTheme = stored preference (for the Light/Dark/System
+  // toggle state); setTheme persists + fans out everywhere.
+  getTheme: () => ipcRenderer.invoke('theme:getResolved'),
+  getRawTheme: () => ipcRenderer.invoke('theme:getRaw'),
+  setTheme: (pref) => ipcRenderer.invoke('theme:set', pref),
+  onThemeChanged: (callback) => {
+    const listener = (_e, resolved) => callback(resolved)
+    ipcRenderer.on('theme:changed', listener)
+    return () => ipcRenderer.removeListener('theme:changed', listener)
+  },
+  onRawThemeChanged: (callback) => {
+    const listener = (_e, raw) => callback(raw)
+    ipcRenderer.on('theme:rawChanged', listener)
+    return () => ipcRenderer.removeListener('theme:rawChanged', listener)
+  },
+
+  // Keyboard Shortcuts panel — static display data sourced from the actual
+  // dispatch code (see src/main/shortcuts.js).
+  getShortcuts: () => ipcRenderer.invoke('shortcuts:getList'),
+
+  // Clear Browsing Data (Privacy → Clear Browsing Data). Clears history +
+  // cookies/site data + cache together.
+  clearBrowsingData: () => ipcRenderer.invoke('privacy:clearBrowsingData'),
+  clearHistory: () => ipcRenderer.send('history:clear'),
+
+  // Last-open category persistence + onboarding replay.
+  getSettingsMeta: () => ipcRenderer.invoke('settings:getMeta'),
+  setLastCategory: (category) => ipcRenderer.send('settings:setLastCategory', category),
+  showOnboarding: () => ipcRenderer.send('onboarding:show')
 })

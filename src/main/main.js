@@ -19,6 +19,10 @@ const { PasswordsManager } = require('./passwords')
 const { registerBookmarksIoHandlers } = require('./bookmarksIo')
 const { PrivacyManager } = require('./privacy')
 const { SearchManager } = require('./search')
+const { Theme } = require('./theme')
+const { SHORTCUTS } = require('./shortcuts')
+const { Onboarding } = require('./onboarding')
+const { pathToFileURL } = require('url')
 
 function writeBookmarksJs(list) {
   try {
@@ -26,6 +30,21 @@ function writeBookmarksJs(list) {
     fs.writeFileSync(path.join(__dirname, '..', 'pages', 'bookmarks.js'), fileContent, 'utf-8')
   } catch (err) {
     console.error("Failed to write bookmarks.js:", err)
+  }
+}
+
+// Same pattern as writeBookmarksJs: the sandboxed newtab/blocked pages (no
+// preload, no IPC by design) read the current theme from a tiny generated
+// <script src> file. Written at startup and on every theme change, so a fresh
+// page load picks up the right palette with no flash of unthemed content.
+// Already-open pages are updated live via executeJavaScript (see pushThemeToTabs).
+const BLOCKED_TAB_URL = pathToFileURL(path.join(__dirname, '..', 'pages', 'blocked.html')).toString()
+function writeThemeJs(resolved) {
+  try {
+    const fileContent = `window.FB_THEME = ${JSON.stringify(resolved)};`
+    fs.writeFileSync(path.join(__dirname, '..', 'pages', 'theme-state.js'), fileContent, 'utf-8')
+  } catch (err) {
+    console.error('Failed to write theme-state.js:', err)
   }
 }
 
@@ -107,6 +126,47 @@ function broadcastToAllChrome(channel, payload) {
   })
 }
 
+// Every trusted renderer (chrome for every window, both primary sidebars, and
+// each satellite utility window) that should restyle itself when the theme
+// changes. Sandboxed tab pages (newtab/blocked) are handled separately via the
+// written file + executeJavaScript push, not this list.
+function trustedThemeTargets() {
+  const targets = []
+  windows.forEach((ctx) => targets.push(ctx.chromeView.webContents))
+  if (workspaceView) targets.push(workspaceView.webContents)
+  if (aiSidebarView) targets.push(aiSidebarView.webContents)
+  ;[settingsWin, pomodoroWin, dashboardWin, onboardingWin].forEach((w) => {
+    if (w && !w.isDestroyed()) targets.push(w.webContents)
+  })
+  return targets
+}
+
+// Live-update any open newtab/blocked tab. The page defines window.__applyFbTheme
+// (see newtab.js / blocked.js); if it isn't defined yet the page is still
+// loading and will read the freshly-written theme-state.js on its own.
+function pushThemeToTabs(resolved) {
+  const js = `window.__applyFbTheme && window.__applyFbTheme(${JSON.stringify(resolved.palette)}, ${JSON.stringify(resolved.mode)});`
+  windows.forEach((ctx) => {
+    for (const tab of ctx.tabManager.tabs.values()) {
+      if (!tab.view || tab.view.webContents.isDestroyed()) continue
+      const url = tab.url || ''
+      if (url.startsWith(NEW_TAB_URL) || url.startsWith(BLOCKED_TAB_URL)) {
+        tab.view.webContents.executeJavaScript(js).catch(() => {})
+      }
+    }
+  })
+}
+
+// The single fan-out for a theme change: persist-driven resolved value in,
+// every surface updated out.
+function applyThemeEverywhere(resolved) {
+  writeThemeJs(resolved)
+  trustedThemeTargets().forEach((wc) => {
+    if (!wc.isDestroyed()) wc.send('theme:changed', resolved)
+  })
+  pushThemeToTabs(resolved)
+}
+
 let win // primary window's BrowserWindow
 let chromeView // primary window's chrome WebContentsView
 let workspaceView
@@ -115,6 +175,7 @@ let tabManager // primary window's TabManager
 let settingsWin = null
 let pomodoroWin = null
 let dashboardWin = null
+let onboardingWin = null
 let tray = null
 let ipcHandlersRegistered = false
 
@@ -140,6 +201,8 @@ const downloadsManager = new DownloadsManager(store, broadcastToAllChrome)
 const passwordsManager = new PasswordsManager(store)
 const privacyManager = new PrivacyManager(store)
 const searchManager = new SearchManager(store)
+const theme = new Theme(store)
+const onboarding = new Onboarding(store)
 
 // Once a minute, while an actual Pomodoro work session is running (not
 // paused, not on break), snapshot the primary window's active tab into the
@@ -694,6 +757,41 @@ function openDashboardWindow() {
   dashboardWin.on('closed', () => { dashboardWin = null })
 }
 
+// ---- onboarding modal window ----
+
+function openOnboardingWindow(force) {
+  // Reuse if already open.
+  if (onboardingWin && !onboardingWin.isDestroyed()) {
+    onboardingWin.show()
+    onboardingWin.focus()
+    return
+  }
+  // Don't auto-show if already completed (unless forced from Settings).
+  if (!force && onboarding.isCompleted()) return
+
+  onboardingWin = new BrowserWindow({
+    width: 560,
+    height: 420,
+    resizable: false,
+    minimizable: false,
+    maximizable: false,
+    title: 'Welcome to Focus Browser',
+    backgroundColor: '#211d1a',
+    icon: APP_ICON_PATH,
+    parent: win,
+    modal: true,
+    webPreferences: {
+      preload: path.join(__dirname, '..', 'onboarding', 'onboarding-preload.js'),
+      contextIsolation: true,
+      nodeIntegration: false,
+      sandbox: true
+    }
+  })
+  onboardingWin.setMenu(null)
+  onboardingWin.loadFile(path.join(__dirname, '..', 'onboarding', 'index.html'))
+  onboardingWin.on('closed', () => { onboardingWin = null })
+}
+
 // ---- tray ----
 
 function formatTime(ms) {
@@ -913,6 +1011,50 @@ function registerIpcHandlers() {
 
   ipcMain.on('settings:open', () => openSettingsWindow())
   ipcMain.on('pomodoro:openPanel', () => togglePomodoroWindow(true))
+
+  // theme:getResolved — what trusted renderers apply (mode already light/dark).
+  // theme:getRaw — the stored preference (mode may be 'system'), for the
+  // Appearance UI's toggle state. theme:set persists + fans out to everything.
+  ipcMain.handle('theme:getResolved', () => theme.getResolved())
+  ipcMain.handle('theme:getRaw', () => theme.getRaw())
+  ipcMain.handle('theme:set', (_e, pref) => {
+    const resolved = theme.set(pref || {})
+    // Echo the raw preference back to the Settings window so its toggle
+    // reflects exactly what was stored (e.g. 'system'), not the resolved value.
+    settingsWin?.webContents.send('theme:rawChanged', theme.getRaw())
+    return resolved
+  })
+
+  ipcMain.handle('shortcuts:getList', () => SHORTCUTS)
+
+  ipcMain.handle('settings:getMeta', () => store.get('settings'))
+  ipcMain.on('settings:setLastCategory', (_e, category) => {
+    if (typeof category === 'string') store.update('settings', { lastOpenCategory: category })
+  })
+
+  ipcMain.on('onboarding:show', () => openOnboardingWindow(true))
+
+  // Both 'completed' and 'skipped' mark onboarding done — zero telemetry,
+  // no distinction stored. Close the window in either case.
+  ipcMain.on('onboarding:dismiss', (_e, _reason) => {
+    onboarding.markCompleted()
+    if (onboardingWin && !onboardingWin.isDestroyed()) {
+      onboardingWin.close()
+    }
+  })
+
+  // Clear Browsing Data (Privacy → Clear Browsing Data): history + cookies/
+  // site data + cache, all local, all at once. Returns a small summary.
+  ipcMain.handle('privacy:clearBrowsingData', async () => {
+    const result = { history: false, storage: false, cache: false }
+    try { history.clearAll(); result.history = true } catch {}
+    try { await session.defaultSession.clearStorageData(); result.storage = true } catch {}
+    try { await session.defaultSession.clearCache(); result.cache = true } catch {}
+    // Refresh any views showing this data.
+    windows.forEach((ctx) => ctx.tabManager.broadcastState())
+    settingsWin?.webContents.send('privacy:state', store.get('permissions'))
+    return result
+  })
 
   ipcMain.handle('focusMode:getState', () => focusMode.state)
   ipcMain.on('focusMode:setEnabled', (_e, enabled) => focusMode.setEnabled(enabled))
@@ -1147,6 +1289,12 @@ app.whenReady().then(() => {
   const bookmarks = store.get('bookmarks') || { list: [] }
   writeBookmarksJs(bookmarks.list || [])
 
+  // Write the initial theme file before any newtab/blocked page can load, and
+  // fan out on every subsequent change (including OS light/dark flips while in
+  // 'system' mode — see Theme's nativeTheme listener).
+  writeThemeJs(theme.getResolved())
+  theme.onChange = (resolved) => applyThemeEverywhere(resolved)
+
   registerUnlockProtocol()
   downloadsManager.registerSession(session.defaultSession)
   downloadsManager.registerIpcHandlers()
@@ -1201,6 +1349,10 @@ app.whenReady().then(() => {
 
   createWindow()
   setupTray()
+
+  // First-run onboarding — auto-show once, never again (unless re-triggered
+  // from Settings → "Show welcome tour").
+  if (!onboarding.isCompleted()) openOnboardingWindow()
 })
 
 app.on('before-quit', () => {

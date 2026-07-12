@@ -103,5 +103,14 @@ contextBridge.exposeInMainWorld('browserAPI', {
     const listener = (_e, val) => callback(val)
     ipcRenderer.on('chrome:setIncognito', listener)
     return () => ipcRenderer.removeListener('chrome:setIncognito', listener)
+  },
+
+  // Theme: getTheme returns the resolved { palette, mode:'light'|'dark' } to
+  // apply; onThemeChanged fires on every change (incl. OS flips in system mode).
+  getTheme: () => ipcRenderer.invoke('theme:getResolved'),
+  onThemeChanged: (callback) => {
+    const listener = (_e, resolved) => callback(resolved)
+    ipcRenderer.on('theme:changed', listener)
+    return () => ipcRenderer.removeListener('theme:changed', listener)
   }
 })

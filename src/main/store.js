@@ -70,11 +70,11 @@ const DEFAULTS = {
   // asked for by name to stay put. Everything else here is an optional
   // feature button, not core navigation, so it's fair game to declutter.
   toolbarVisibility: {
-    reader: true,
-    group: true,
-    focusMode: true,
+    reader: false,
+    group: false,
+    focusMode: false,
     pomodoro: true,
-    launcher: true,
+    launcher: false,
     dashboard: true,
     aiChat: true
   },
@@ -123,6 +123,25 @@ const DEFAULTS = {
   },
   zoomSettings: {
     hosts: {}
+  },
+  // Theme preference. mode is the user's *choice* — 'light' | 'dark' |
+  // 'system' — resolved to a concrete light/dark at broadcast time (see
+  // src/main/theme.js). Default is Night lofi, dark (unchanged from the
+  // pre-redesign look); 'system' is an available option, not the default.
+  theme: {
+    palette: 'nightlofi',
+    mode: 'dark'
+  },
+  // First-run onboarding tour. Skip and Finish both set completed=true; there
+  // is deliberately no separate skipped-vs-completed tracking (zero telemetry).
+  onboarding: {
+    completed: false,
+    completedAt: null
+  },
+  // Misc Settings-window UI state that isn't feature data. lastOpenCategory
+  // reopens Settings on the last category viewed rather than always the first.
+  settings: {
+    lastOpenCategory: 'focus'
   }
 }
 
@@ -160,7 +179,10 @@ class SettingsStore {
         passwords: { ...DEFAULTS.passwords, ...parsed.passwords },
         permissions: { ...DEFAULTS.permissions, ...parsed.permissions },
         searchSettings: { ...DEFAULTS.searchSettings, ...parsed.searchSettings },
-        zoomSettings: { ...DEFAULTS.zoomSettings, ...parsed.zoomSettings }
+        zoomSettings: { ...DEFAULTS.zoomSettings, ...parsed.zoomSettings },
+        theme: { ...DEFAULTS.theme, ...parsed.theme },
+        onboarding: { ...DEFAULTS.onboarding, ...parsed.onboarding },
+        settings: { ...DEFAULTS.settings, ...parsed.settings }
       }
     } catch {
       return JSON.parse(JSON.stringify(DEFAULTS))

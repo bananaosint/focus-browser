@@ -3,6 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <title>Blocked by Focus Browser</title>
+  <!-- Theme applied synchronously before paint; see newtab.html for the pattern. -->
+  <script src="theme-state.js"></script>
+  <script src="../theme/palettes.js"></script>
+  <script src="../theme/applyTheme.js"></script>
+  <script>
+    (function () {
+      var t = window.FB_THEME || (window.FocusTheme && window.FocusTheme.DEFAULT_THEME) || { palette: 'nightlofi', mode: 'dark' };
+      window.FocusTheme.applyTheme(t.palette, t.mode);
+      window.__applyFbTheme = function (palette, mode) { window.FocusTheme.applyTheme(palette, mode); };
+    })();
+  </script>
   <link rel="stylesheet" href="blocked.css" />
 </head>
 <body>

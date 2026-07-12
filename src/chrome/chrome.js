@@ -83,18 +83,24 @@ function render(state) {
 
     const title = document.createElement('div')
     title.className = 'title'
-    const label = tab.isLoading ? 'Loading…' : (tab.title || 'New Tab')
-    title.textContent = tab.frozen ? '❄ ' + label : label
+    title.textContent = tab.isLoading ? 'Loading…' : (tab.title || 'New Tab')
 
     const close = document.createElement('div')
     close.className = 'close'
-    close.textContent = '✕'
+    close.innerHTML = window.FocusIcons.svg('close', 13)
     close.addEventListener('click', (e) => {
       e.stopPropagation()
       window.browserAPI.closeTab(tab.id)
     })
 
     el.appendChild(favicon)
+    if (tab.frozen) {
+      const frost = document.createElement('span')
+      frost.className = 'frozen-icon'
+      frost.title = 'Frozen'
+      frost.innerHTML = window.FocusIcons.svg('snowflake', 11)
+      el.appendChild(frost)
+    }
     el.appendChild(title)
     el.appendChild(close)
 
@@ -171,6 +177,16 @@ function render(state) {
 
 window.browserAPI.onState(render)
 window.browserAPI.getState().then(render)
+
+// ---- theme + icons ----
+// Fill the toolbar's [data-icon] buttons, then apply the current theme and
+// keep it in sync (covers palette/mode changes and OS light/dark flips).
+window.FocusIcons.hydrate(document)
+function applyChromeTheme(t) {
+  if (t) window.FocusTheme.applyTheme(t.palette, t.mode)
+}
+window.browserAPI.getTheme().then(applyChromeTheme)
+window.browserAPI.onThemeChanged(applyChromeTheme)
 
 newTabBtn.addEventListener('click', () => window.browserAPI.newTab())
 newTabBtn.addEventListener('contextmenu', (e) => {

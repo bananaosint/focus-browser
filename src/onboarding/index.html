@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Welcome to Focus Browser</title>
+  <link rel="stylesheet" href="onboarding.css" />
+</head>
+<body>
+  <button id="skip-btn" class="skip">Skip</button>
+
+  <div id="stage" class="stage">
+    <section class="slide active" data-index="0">
+      <div class="slide-icon" data-icon="focusRings" data-icon-size="40"></div>
+      <h1>A browser built to help you finish things</h1>
+      <p>Focus Browser puts real friction between you and distraction, runs focus sessions that protect themselves, and keeps everything strictly on your machine — no accounts, no sync.</p>
+    </section>
+
+    <section class="slide" data-index="1">
+      <div class="slide-icon" data-icon="shield" data-icon-size="40"></div>
+      <h1>Blocking that's actually hard to click through</h1>
+      <p>Most blockers fail because turning them off takes one click. Here, getting past a blocked site costs a 60-second wait plus typing a phrase — enough friction that the impulse passes, but a genuine need still gets through.</p>
+    </section>
+
+    <section class="slide" data-index="2">
+      <div class="slide-icon" data-icon="clock" data-icon-size="40"></div>
+      <h1>Work sessions that lock in your focus automatically</h1>
+      <p>Start a Pomodoro work session and site blocking plus Focus Mode switch on by themselves — then revert to exactly how you had them when the break begins. Set it up in Settings under Focus.</p>
+    </section>
+
+    <section class="slide" data-index="3">
+      <div class="slide-icon" data-icon="folder" data-icon-size="40"></div>
+      <h1>Your project files and tools, one click away</h1>
+      <p>Open a local folder in the workspace sidebar, save Launch Profiles that open a set of tabs and apps together, and keep a bring-your-own-key AI chat panel beside your work.</p>
+    </section>
+
+    <section class="slide" data-index="4">
+      <div class="slide-icon" data-icon="chart" data-icon-size="40"></div>
+      <h1>See where your time actually goes</h1>
+      <p>The Usage Dashboard tracks attention per site, locally only. Everything else lives in Settings — and the search box there finds any setting by name.</p>
+    </section>
+  </div>
+
+  <footer class="controls">
+    <div id="dots" class="dots"></div>
+    <div class="nav-buttons">
+      <button id="back-btn" class="nav secondary">Back</button>
+      <button id="next-btn" class="nav primary">Next</button>
+    </div>
+  </footer>
+
+  <script src="../theme/palettes.js"></script>
+  <script src="../theme/applyTheme.js"></script>
+  <script src="../theme/icons.js"></script>
+  <script src="onboarding.js"></script>
+</body>
+</html>

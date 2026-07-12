@@ -269,3 +269,11 @@ function applyState(state) {
 
 window.aiChatAPI.onState(applyState)
 window.aiChatAPI.getState().then(applyState)
+
+// ---- theme + icons ----
+window.FocusIcons.hydrate(document)
+function applyAiChatTheme(t) {
+  if (t) window.FocusTheme.applyTheme(t.palette, t.mode)
+}
+window.aiChatAPI.getTheme().then(applyAiChatTheme)
+window.aiChatAPI.onThemeChanged(applyAiChatTheme)

@@ -21,7 +21,7 @@ function render(state) {
   timeEl.textContent = formatTime(state.remainingMs)
   primaryBtn.textContent = state.running ? 'Pause' : 'Start'
   muteBtn.classList.toggle('active', !!state.settings.muted)
-  muteBtn.innerHTML = state.settings.muted ? '&#128277;' : '&#128276;'
+  muteBtn.innerHTML = window.FocusIcons.svg(state.settings.muted ? 'bellOff' : 'bell', 15)
   muteBtn.title = state.settings.muted ? 'Unmute session-end sound' : 'Mute session-end sound'
 
   const total = state.settings.cyclesBeforeLongBreak
@@ -56,3 +56,10 @@ document.querySelectorAll('.adjust-btn').forEach((btn) => {
 
 window.pomodoroAPI.onState(render)
 window.pomodoroAPI.getState().then(render)
+
+// ---- theme ----
+function applyPomodoroTheme(t) {
+  if (t) window.FocusTheme.applyTheme(t.palette, t.mode)
+}
+window.pomodoroAPI.getTheme().then(applyPomodoroTheme)
+window.pomodoroAPI.onThemeChanged(applyPomodoroTheme)

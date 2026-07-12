@@ -27,5 +27,12 @@ contextBridge.exposeInMainWorld('aiChatAPI', {
     const listener = (_e, payload) => callback(payload)
     ipcRenderer.on('aiChat:macroDone', listener)
     return () => ipcRenderer.removeListener('aiChat:macroDone', listener)
+  },
+
+  getTheme: () => ipcRenderer.invoke('theme:getResolved'),
+  onThemeChanged: (callback) => {
+    const listener = (_e, resolved) => callback(resolved)
+    ipcRenderer.on('theme:changed', listener)
+    return () => ipcRenderer.removeListener('theme:changed', listener)
   }
 })

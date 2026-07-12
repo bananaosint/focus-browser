@@ -8,14 +8,14 @@
 <body>
   <div id="header">
     <div id="header-title">FocusCompanion</div>
-    <button id="clear-btn" title="Clear conversation">&#8635;</button>
+    <button id="clear-btn" title="Clear conversation" aria-label="Clear conversation" data-icon="reload" data-icon-size="14"></button>
     <div id="width-controls">
-      <button id="width-shrink-btn" title="Narrower">&#8722;</button>
-      <button id="width-grow-btn" title="Wider">&#43;</button>
+      <button id="width-shrink-btn" title="Narrower" aria-label="Narrower" data-icon="minus" data-icon-size="14"></button>
+      <button id="width-grow-btn" title="Wider" aria-label="Wider" data-icon="plus" data-icon-size="14"></button>
     </div>
   </div>
   <div id="not-configured-banner" class="hidden">
-    No API key set. Add one in Settings &rarr; AI Chat.
+    No API key set. Add one in Settings under AI Chat.
   </div>
   <div id="messages"></div>
   <div id="input-row">
@@ -25,6 +25,9 @@
       <button id="macro-btn" title="Run this as a multi-step task in the background">Run in background</button>
     </div>
   </div>
+  <script src="../theme/palettes.js"></script>
+  <script src="../theme/applyTheme.js"></script>
+  <script src="../theme/icons.js"></script>
   <script src="aiChat.js"></script>
 </body>
 </html>

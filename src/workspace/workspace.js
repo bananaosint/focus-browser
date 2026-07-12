@@ -152,3 +152,11 @@ function applyState(state) {
 
 window.workspaceAPI.onState(applyState)
 window.workspaceAPI.getState().then(applyState)
+
+// ---- theme + icons ----
+window.FocusIcons.hydrate(document)
+function applyWorkspaceTheme(t) {
+  if (t) window.FocusTheme.applyTheme(t.palette, t.mode)
+}
+window.workspaceAPI.getTheme().then(applyWorkspaceTheme)
+window.workspaceAPI.onThemeChanged(applyWorkspaceTheme)

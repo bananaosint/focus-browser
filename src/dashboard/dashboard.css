@@ -1,28 +1,43 @@
+/* Theme fallbacks (Night lofi dark) for the split second before applyTheme
+   runs; the real values are set on :root at runtime. The dashboard's own
+   local variables below are remapped onto these --fb-* tokens so the whole
+   window rethemes from one place. */
 :root {
-  --bg-primary: #0f0f11;
-  --bg-gradient: radial-gradient(circle at top, #18181f 0%, #0d0d10 100%);
-  --card-bg: rgba(26, 26, 32, 0.7);
-  --card-border: 1px solid rgba(255, 255, 255, 0.05);
-  
-  --color-text: #f4f4f7;
-  --color-muted: #8e909d;
-  --color-hint: #636570;
-  
-  --accent-primary: #6366f1; /* Indigo */
-  --accent-primary-hover: #4f46e5;
-  --accent-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-  --accent-glow: 0 0 12px rgba(99, 102, 241, 0.3);
-  
+  --fb-bg: #211d1a;
+  --fb-surface: #2a2521;
+  --fb-text: #ece6df;
+  --fb-muted: #a89f92;
+  --fb-border: #3a332c;
+  --fb-accent: #d98b6b;
+  --fb-accent-soft: #d98b6b22;
+  --fb-font-sans: -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fb-font-serif: Georgia, "Iowan Old Style", "Noto Serif", serif;
+  --fb-font-mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+
+  --bg-primary: var(--fb-bg);
+  --bg-gradient: none;
+  --card-bg: var(--fb-surface);
+  --card-border: 1px solid var(--fb-border);
+
+  --color-text: var(--fb-text);
+  --color-muted: var(--fb-muted);
+  --color-hint: var(--fb-muted);
+
+  --accent-primary: var(--fb-accent);
+  --accent-primary-hover: var(--fb-accent);
+  --accent-gradient: var(--fb-accent);
+  --accent-glow: none;
+
   --danger-color: #ef4444;
   --danger-hover: #dc2626;
-  
+
   --radius-sm: 6px;
   --radius-md: 10px;
   --radius-lg: 14px;
-  
-  --font-title: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  
+
+  --font-title: var(--fb-font-serif);
+  --font-body: var(--fb-font-sans);
+
   --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -78,9 +93,7 @@ body {
   font-size: 20px;
   font-weight: 600;
   letter-spacing: -0.3px;
-  background: linear-gradient(to right, #ffffff, #a5b4fc);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--color-text);
 }
 
 .tabs-wrapper {
@@ -119,7 +132,7 @@ body {
   background: var(--card-bg);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  color: #ffffff;
+  color: var(--color-text);
 }
 
 .tab-icon {
@@ -470,7 +483,7 @@ body {
   font-family: var(--font-title);
   font-size: 15px;
   font-weight: 600;
-  color: #ffffff;
+  color: var(--color-text);
   margin-bottom: 16px;
   background: rgba(255, 255, 255, 0.02);
   display: inline-block;
@@ -691,7 +704,7 @@ body {
   font-family: var(--font-title);
   font-size: 20px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-text);
 }
 
 .achievement-label {

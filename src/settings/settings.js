@@ -1,12 +1,221 @@
-// ---- tabs ----
+// ---- category router (7 categories) ----
+// Each category is a top-level nav button + a <section id="panel-{category}">.
+// The per-feature control logic further down keys off element ids, which are
+// preserved from the old layout, so it keeps working unchanged; only the
+// navigation shell changed. Switching a category persists it (lastOpenCategory)
+// and runs any per-category on-show hook (e.g. refreshing the cookie list).
+const CATEGORY_ON_SHOW = {
+  privacy: () => refreshCookies()
+}
+
+function switchCategory(category, { persist = true } = {}) {
+  const btn = document.querySelector(`.tab-btn[data-category="${category}"]`)
+  if (!btn) return
+  document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'))
+  document.querySelectorAll('.panel').forEach((p) => p.classList.remove('active'))
+  btn.classList.add('active')
+  const panel = document.getElementById('panel-' + category)
+  panel.classList.add('active')
+  panel.scrollTop = 0
+  const contentPanel = document.querySelector('.content-panel')
+  if (contentPanel) contentPanel.scrollTop = 0
+  if (CATEGORY_ON_SHOW[category]) CATEGORY_ON_SHOW[category]()
+  if (persist) window.settingsAPI.setLastCategory(category)
+}
+
 document.querySelectorAll('.tab-btn').forEach((btn) => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'))
-    document.querySelectorAll('.panel').forEach((p) => p.classList.remove('active'))
-    btn.classList.add('active')
-    document.getElementById('panel-' + btn.dataset.tab).classList.add('active')
+  btn.addEventListener('click', () => switchCategory(btn.dataset.category))
+})
+
+// ---- jump ribbons (scroll to a subsection within a category) ----
+document.querySelectorAll('.jump-pill').forEach((pill) => {
+  pill.addEventListener('click', () => {
+    const target = document.getElementById(pill.dataset.anchor)
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' })
   })
 })
+
+// ---- flash-highlight a control after navigating to it ----
+function flashControl(controlId) {
+  const el = document.getElementById(controlId)
+  if (!el) return
+  const card = el.closest('.card, .card--warning, .details-card') || el
+  card.classList.add('flash-highlight')
+  setTimeout(() => card.classList.remove('flash-highlight'), 1500)
+}
+
+// Shared "go to this setting" used by search results.
+function navigateToSetting(entry) {
+  switchCategory(entry.category)
+  setTimeout(() => {
+    const anchor = document.getElementById(entry.anchor)
+    if (anchor) anchor.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    flashControl(entry.controlId)
+  }, 60)
+}
+
+// ---- settings search ----
+const searchInput = document.getElementById('settings-search')
+const searchResults = document.getElementById('settings-search-results')
+const CATEGORY_LABELS = {
+  focus: 'Focus', browser: 'Browser', privacy: 'Privacy & Security',
+  passwords: 'Passwords', downloads: 'Downloads', bookmarks: 'Bookmarks', aichat: 'AI Chat'
+}
+
+function renderSearchResults(query) {
+  const q = query.trim()
+  if (!q) { searchResults.classList.add('hidden'); searchResults.innerHTML = ''; return }
+  const hits = window.SettingsSearch.searchSettings(q, 6)
+  searchResults.innerHTML = ''
+  if (hits.length === 0) {
+    const none = document.createElement('div')
+    none.className = 'search-none'
+    none.textContent = `No settings found for "${q}"`
+    searchResults.appendChild(none)
+  } else {
+    hits.forEach((entry) => {
+      const item = document.createElement('div')
+      item.className = 'search-result'
+      const label = document.createElement('div')
+      label.className = 'search-result-label'
+      label.textContent = entry.label
+      const crumb = document.createElement('div')
+      crumb.className = 'search-result-crumb'
+      crumb.textContent = `${CATEGORY_LABELS[entry.category]} › ${entry.section}`
+      item.appendChild(label)
+      item.appendChild(crumb)
+      item.addEventListener('mousedown', (e) => {
+        e.preventDefault()
+        navigateToSetting(entry)
+        searchInput.value = ''
+        searchResults.classList.add('hidden')
+      })
+      searchResults.appendChild(item)
+    })
+  }
+  searchResults.classList.remove('hidden')
+}
+
+searchInput.addEventListener('input', () => renderSearchResults(searchInput.value))
+searchInput.addEventListener('focus', () => { if (searchInput.value.trim()) renderSearchResults(searchInput.value) })
+searchInput.addEventListener('blur', () => setTimeout(() => searchResults.classList.add('hidden'), 120))
+searchInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { searchInput.value = ''; searchResults.classList.add('hidden'); searchInput.blur() }
+})
+
+// ---- appearance (theme) panel ----
+const swatchesEl = document.getElementById('appearance-swatches')
+const modeToggleEl = document.getElementById('appearance-mode-toggle')
+let rawTheme = { palette: 'nightlofi', mode: 'dark' }
+
+function renderSwatches() {
+  swatchesEl.innerHTML = ''
+  const palettes = window.FocusTheme.PALETTES
+  Object.keys(palettes).forEach((key) => {
+    const pal = palettes[key]
+    const light = pal.light
+    const sw = document.createElement('button')
+    sw.className = 'appearance-swatch' + (rawTheme.palette === key ? ' selected' : '')
+    sw.dataset.palette = key
+    sw.innerHTML =
+      `<div class="swatch-dots">` +
+      `<span style="background:${light.bg};border:1px solid ${light.border}"></span>` +
+      `<span style="background:${light.accent}"></span>` +
+      `<span style="background:${light.text}"></span>` +
+      `</div>` +
+      `<div class="swatch-name">${pal.label}</div>` +
+      `<div class="swatch-blurb">${pal.blurb}</div>`
+    sw.addEventListener('click', () => {
+      window.settingsAPI.setTheme({ palette: key })
+    })
+    swatchesEl.appendChild(sw)
+  })
+}
+
+function renderModeToggle() {
+  modeToggleEl.querySelectorAll('button').forEach((b) => {
+    b.classList.toggle('active', b.dataset.mode === rawTheme.mode)
+  })
+}
+
+modeToggleEl.querySelectorAll('button').forEach((b) => {
+  b.addEventListener('click', () => window.settingsAPI.setTheme({ mode: b.dataset.mode }))
+})
+
+function applyRawTheme(raw) {
+  if (!raw) return
+  rawTheme = raw
+  renderSwatches()
+  renderModeToggle()
+}
+
+// Apply the visual theme to the Settings window itself + keep the Appearance
+// UI's toggle/swatch state in sync with the stored preference.
+function applySettingsTheme(resolved) {
+  if (resolved) window.FocusTheme.applyTheme(resolved.palette, resolved.mode)
+}
+window.settingsAPI.getTheme().then(applySettingsTheme)
+window.settingsAPI.onThemeChanged(applySettingsTheme)
+window.settingsAPI.getRawTheme().then(applyRawTheme)
+window.settingsAPI.onRawThemeChanged(applyRawTheme)
+
+// ---- keyboard shortcuts panel ----
+window.settingsAPI.getShortcuts().then((groups) => {
+  const container = document.getElementById('shortcuts-list')
+  if (!container || !groups) return
+  container.innerHTML = ''
+  groups.forEach((group) => {
+    const g = document.createElement('div')
+    g.className = 'shortcut-group'
+    const title = document.createElement('div')
+    title.className = 'shortcut-group-title'
+    title.textContent = group.group
+    g.appendChild(title)
+    group.items.forEach((item) => {
+      const row = document.createElement('div')
+      row.className = 'shortcut-row'
+      const action = document.createElement('span')
+      action.className = 'shortcut-action'
+      action.textContent = item.action
+      const keys = document.createElement('span')
+      keys.className = 'shortcut-keys'
+      item.keys.forEach((k) => {
+        const kbd = document.createElement('kbd')
+        kbd.textContent = k
+        keys.appendChild(kbd)
+      })
+      row.appendChild(action)
+      row.appendChild(keys)
+      g.appendChild(row)
+    })
+    container.appendChild(g)
+  })
+})
+
+// ---- clear browsing data (destructive confirm) ----
+document.getElementById('privacy-clear-all-btn').addEventListener('click', async () => {
+  const ok = await window.ConfirmOverlay.show({
+    title: 'Clear browsing data?',
+    message: 'This deletes your browsing history, cookies and site data, and cache. It cannot be undone.',
+    confirmLabel: 'Clear data',
+    danger: true
+  })
+  if (!ok) return
+  await window.settingsAPI.clearBrowsingData()
+  refreshCookies()
+})
+
+// ---- show welcome tour ----
+document.getElementById('show-tour-btn').addEventListener('click', () => window.settingsAPI.showOnboarding())
+
+// ---- boot: icons, restore last category, focus search ----
+window.FocusIcons.hydrate(document)
+window.settingsAPI.getSettingsMeta().then((meta) => {
+  if (meta && meta.lastOpenCategory) switchCategory(meta.lastOpenCategory, { persist: false })
+})
+// Search takes focus on open — keyboard-first, no click needed.
+window.addEventListener('DOMContentLoaded', () => searchInput.focus())
+if (document.readyState !== 'loading') searchInput.focus()
 
 // ---- blocking panel ----
 const enabledToggle = document.getElementById('enabled-toggle')
@@ -22,7 +231,7 @@ function renderPatternList(el, patterns, onRemove) {
     const span = document.createElement('span')
     span.textContent = pattern
     const removeBtn = document.createElement('button')
-    removeBtn.textContent = '✕'
+    removeBtn.innerHTML = window.FocusIcons.svg('close', 12)
     removeBtn.addEventListener('click', () => onRemove(pattern))
     li.appendChild(span)
     li.appendChild(removeBtn)
@@ -190,7 +399,7 @@ function renderProfiles(state) {
     })
 
     const deleteBtn = document.createElement('button')
-    deleteBtn.textContent = '✕'
+    deleteBtn.innerHTML = window.FocusIcons.svg('close', 12)
     deleteBtn.addEventListener('click', () => {
       window.settingsAPI.removeProfile(profile.id)
       if (editingProfileId === profile.id) resetProfileForm()
@@ -303,9 +512,29 @@ aiModelEl.addEventListener('change', () => {
   if (suppressAiChatEcho) return
   window.settingsAPI.updateAiChatSettings({ model: aiModelEl.value.trim() })
 })
-aiAgenticToggleEl.addEventListener('change', () => {
+aiAgenticToggleEl.addEventListener('change', async () => {
   if (suppressAiChatEcho) return
-  window.settingsAPI.updateAiChatSettings({ agenticToolsEnabled: aiAgenticToggleEl.checked })
+  // Turning it OFF is immediate; turning it ON requires an explicit,
+  // checkbox-gated confirm — a single stray click shouldn't grant page-script
+  // execution. If the confirm is cancelled, revert the checkbox.
+  if (!aiAgenticToggleEl.checked) {
+    window.settingsAPI.updateAiChatSettings({ agenticToolsEnabled: false })
+    return
+  }
+  const ok = await window.ConfirmOverlay.show({
+    title: 'Enable agentic browser tools?',
+    message: 'This lets the AI run scripts on the tabs you already have open — the same access to a page as your own browsing session.',
+    checkboxLabel: 'I understand this lets AI run scripts on my open tabs',
+    confirmLabel: 'Enable',
+    danger: true
+  })
+  if (ok) {
+    window.settingsAPI.updateAiChatSettings({ agenticToolsEnabled: true })
+  } else {
+    suppressAiChatEcho = true
+    aiAgenticToggleEl.checked = false
+    suppressAiChatEcho = false
+  }
 })
 aiProductivityToggleEl.addEventListener('change', () => {
   if (suppressAiChatEcho) return
@@ -347,7 +576,7 @@ function renderBookmarksSettings(state) {
       const actions = document.createElement('div')
       actions.className = 'profile-actions'
       const deleteBtn = document.createElement('button')
-      deleteBtn.textContent = '✕'
+      deleteBtn.innerHTML = window.FocusIcons.svg('close', 12)
       deleteBtn.addEventListener('click', () => {
         window.settingsAPI.removeBookmark(b.url)
       })
@@ -583,7 +812,7 @@ function filterPasswords() {
     })
     
     const deleteBtn = document.createElement('button')
-    deleteBtn.textContent = '✕'
+    deleteBtn.innerHTML = window.FocusIcons.svg('close', 12)
     deleteBtn.addEventListener('click', () => {
       window.settingsAPI.deletePassword(p.id)
     })
@@ -721,7 +950,7 @@ function renderPermissions(state) {
         info.appendChild(meta)
         
         const deleteBtn = document.createElement('button')
-        deleteBtn.textContent = '✕'
+        deleteBtn.innerHTML = window.FocusIcons.svg('close', 12)
         deleteBtn.addEventListener('click', () => {
           window.settingsAPI.deletePermission({ host, permission: perm })
         })
@@ -736,12 +965,7 @@ function renderPermissions(state) {
 
 window.settingsAPI.onPrivacyState(renderPermissions)
 window.settingsAPI.getPrivacyState().then(renderPermissions)
-
-// Refresh cookies list when switching to privacy tab
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    if (btn.dataset.tab === 'privacy') {
-      refreshCookies()
-    }
-  })
-})
+// Cookie list is (re)fetched whenever the Privacy category is shown — see
+// CATEGORY_ON_SHOW in the router at the top of this file. Fetch once now too,
+// in case Privacy is the restored last-open category on launch.
+refreshCookies()

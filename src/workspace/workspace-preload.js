@@ -14,5 +14,12 @@ contextBridge.exposeInMainWorld('workspaceAPI', {
     const listener = (_e, state) => callback(state)
     ipcRenderer.on('workspace:state', listener)
     return () => ipcRenderer.removeListener('workspace:state', listener)
+  },
+
+  getTheme: () => ipcRenderer.invoke('theme:getResolved'),
+  onThemeChanged: (callback) => {
+    const listener = (_e, resolved) => callback(resolved)
+    ipcRenderer.on('theme:changed', listener)
+    return () => ipcRenderer.removeListener('theme:changed', listener)
   }
 })

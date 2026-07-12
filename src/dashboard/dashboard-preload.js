@@ -27,5 +27,12 @@ contextBridge.exposeInMainWorld('dashboardAPI', {
     const listener = (_e, state) => callback(state)
     ipcRenderer.on('focusStats:state', listener)
     return () => ipcRenderer.removeListener('focusStats:state', listener)
+  },
+
+  getTheme: () => ipcRenderer.invoke('theme:getResolved'),
+  onThemeChanged: (callback) => {
+    const listener = (_e, resolved) => callback(resolved)
+    ipcRenderer.on('theme:changed', listener)
+    return () => ipcRenderer.removeListener('theme:changed', listener)
   }
 })

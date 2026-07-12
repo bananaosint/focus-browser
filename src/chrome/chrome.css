@@ -1,10 +1,26 @@
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, "Segoe UI", Roboto, sans-serif; }
+/* Theme tokens (--fb-*) are set on :root at runtime by applyTheme.js. The
+   fallbacks here (Night lofi dark) keep the chrome sane for the split second
+   before the theme is applied on load. */
+:root {
+  --fb-bg: #211d1a;
+  --fb-surface: #2a2521;
+  --fb-text: #ece6df;
+  --fb-muted: #a89f92;
+  --fb-border: #3a332c;
+  --fb-accent: #d98b6b;
+  --fb-accent-soft: #d98b6b22;
+  --fb-font-sans: -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fb-font-serif: Georgia, "Iowan Old Style", "Noto Serif", serif;
+  --fb-font-mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--fb-font-sans); }
 
 html, body {
   width: 100%;
   height: 100%;
-  background: #1e1f22;
-  color: #e4e4e7;
+  background: var(--fb-bg);
+  color: var(--fb-text);
   overflow: hidden;
   user-select: none;
 }
@@ -13,7 +29,7 @@ html, body {
   display: flex;
   align-items: center;
   height: 38px;
-  background: #1e1f22;
+  background: var(--fb-bg);
   padding: 0 6px;
 }
 
@@ -22,42 +38,71 @@ html, body {
   align-items: center;
   height: 100%;
   overflow-x: auto;
-  /* flex-shrink (not flex-grow) — #tabs only takes as much width as its tabs
-     need, so the + button sits right after the last tab instead of getting
-     pushed to the far right edge of the strip when there's only a few tabs.
-     min-width:0 lets it still shrink below content size to enable internal
-     scroll once there are enough tabs to overflow. */
+  /* flex-shrink (not grow) so the + button sits right after the last tab
+     instead of being pushed to the far edge; min-width:0 lets it still shrink
+     to enable internal scroll once tabs overflow. */
   flex: 0 1 auto;
   min-width: 0;
   scrollbar-width: none;
 }
 #tabs::-webkit-scrollbar { display: none; }
 
+/* Minimal underline tabs — no filled chip. Inactive tabs are muted text; the
+   active tab gets full-color text and a 2px accent underline. */
 .tab {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   height: 30px;
-  padding: 0 10px;
-  margin-right: 4px;
-  border-radius: 6px;
-  background: #2a2b2f;
+  padding: 0 12px;
+  margin-right: 2px;
   font-size: 12.5px;
   white-space: nowrap;
   max-width: 180px;
   cursor: pointer;
-  border-top: 3px solid transparent;
+  color: var(--fb-muted);
+  border-bottom: 2px solid transparent;
+  border-top: 2px solid transparent;
   flex-shrink: 0;
+  transition: color 0.15s ease, border-color 0.15s ease;
 }
-.tab.active { background: #35363b; color: #fff; }
-.tab.frozen { opacity: 0.55; }
+.tab:hover { color: var(--fb-text); }
+.tab.active { color: var(--fb-text); border-bottom-color: var(--fb-accent); }
+.tab.frozen { opacity: 0.5; }
 .tab.frozen:hover { opacity: 0.8; }
 .tab .title { overflow: hidden; text-overflow: ellipsis; max-width: 120px; }
-.tab .close { opacity: 0; margin-left: auto; font-size: 12px; color: #999; }
+.tab .frozen-icon { display: inline-flex; color: var(--fb-muted); }
+.tab .close {
+  opacity: 0;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  color: var(--fb-muted);
+  border-radius: 4px;
+}
 .tab:hover .close { opacity: 1; }
-.tab .close:hover { color: #fff; }
-.tab .favicon { width: 12px; height: 12px; border-radius: 2px; background: #555; flex-shrink: 0; overflow: hidden; }
-.tab .favicon img { width: 12px; height: 12px; display: block; }
+.tab .close:hover { color: var(--fb-text); background: var(--fb-accent-soft); }
+
+/* Favicon slot: a real favicon fills it; when empty, a small dot stands in
+   (accent on the active tab, muted otherwise) rather than a grey square. */
+.tab .favicon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.tab .favicon:empty::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--fb-muted);
+}
+.tab.active .favicon:empty::before { background: var(--fb-accent); }
+.tab .favicon img { width: 14px; height: 14px; display: block; border-radius: 3px; }
 
 #new-tab-btn {
   width: 26px;
@@ -66,11 +111,14 @@ html, body {
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #ccc;
+  color: var(--fb-muted);
   font-size: 16px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
-#new-tab-btn:hover { background: #2a2b2f; }
+#new-tab-btn:hover { background: var(--fb-accent-soft); color: var(--fb-text); }
 
 #toolbar {
   display: flex;
@@ -78,8 +126,8 @@ html, body {
   gap: 4px;
   height: 38px;
   padding: 0 8px;
-  background: #202124;
-  border-bottom: 1px solid #2f3034;
+  background: var(--fb-surface);
+  border-bottom: 1px solid var(--fb-border);
 }
 
 #toolbar button {
@@ -88,13 +136,17 @@ html, body {
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: #ccc;
+  color: var(--fb-muted);
   font-size: 14px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
-#toolbar button:hover { background: #2a2b2f; }
+#toolbar button:hover { background: var(--fb-accent-soft); color: var(--fb-text); }
+#toolbar button svg { display: block; }
 #toolbar button:disabled { opacity: 0.35; cursor: default; }
-#toolbar button:disabled:hover { background: transparent; }
+#toolbar button:disabled:hover { background: transparent; color: var(--fb-muted); }
 #toolbar button.toolbar-hidden { display: none; }
 
 #address-container {
@@ -108,14 +160,16 @@ html, body {
   width: 100%;
   height: 28px;
   border-radius: 14px;
-  border: 1px solid #33343a;
-  background: #17181a;
-  color: #e4e4e7;
+  border: 1px solid var(--fb-border);
+  background: var(--fb-bg);
+  color: var(--fb-text);
   padding: 0 34px 0 14px;
   font-size: 12.5px;
   outline: none;
+  transition: border-color 0.15s ease;
 }
-#address-bar:focus { border-color: #5b8def; }
+#address-bar:focus { border-color: var(--fb-accent); }
+#address-bar::placeholder { color: var(--fb-muted); }
 
 #heart-btn {
   position: absolute;
@@ -125,7 +179,7 @@ html, body {
   background: transparent !important;
   border: none !important;
   cursor: pointer !important;
-  color: #8c8d93 !important;
+  color: var(--fb-muted) !important;
   padding: 0 !important;
   display: flex !important;
   align-items: center;
@@ -134,11 +188,11 @@ html, body {
   z-index: 5;
 }
 #heart-btn:hover {
-  color: #ff8fa3 !important;
+  color: var(--fb-accent) !important;
   transform: scale(1.1);
 }
 #heart-btn.favorited {
-  color: #ff4b72 !important;
+  color: var(--fb-accent) !important;
 }
 #heart-btn.favorited svg {
   fill: currentColor;
@@ -152,52 +206,40 @@ html, body {
   padding: 0 10px !important;
   font-size: 11.5px !important;
 }
-/* Strips the one "extra" toolbar affordance this minimal chrome has — the
-   closest analog available here to the plan's "hide bookmarks bar/extensions
-   row" for a browser that never had either. */
+/* Focus Mode strips the one "extra" affordance this minimal chrome has —
+   the closest analog to the plan's "hide bookmarks bar" for a browser that
+   never had one. */
 body.focus-mode #new-group-btn { display: none; }
 
-#reader-btn { font-size: 13px !important; }
-#reader-btn.active { background: #2a3a52; color: #9cc4ff; }
-#reader-btn.active:hover { background: #33455f; }
+#reader-btn.active { background: var(--fb-accent-soft); color: var(--fb-accent); }
+#reader-btn.active:hover { background: var(--fb-accent-soft); color: var(--fb-accent); }
 
-#workspace-btn { font-size: 13px !important; }
-#workspace-btn.active { background: #2a3a52; color: #9cc4ff; }
-#workspace-btn.active:hover { background: #33455f; }
+#workspace-btn.active { background: var(--fb-accent-soft); color: var(--fb-accent); }
+#workspace-btn.active:hover { background: var(--fb-accent-soft); color: var(--fb-accent); }
 
-#focus-mode-btn {
-  width: auto !important;
-  padding: 0 10px !important;
-  font-size: 11.5px !important;
-}
-#focus-mode-btn.active { background: #2f4a33; color: #a3e0a8; }
-#focus-mode-btn.active:hover { background: #395a3e; }
+#focus-mode-btn.active { background: var(--fb-accent-soft); color: var(--fb-accent); }
+#focus-mode-btn.active:hover { background: var(--fb-accent-soft); color: var(--fb-accent); }
 
+/* Pomodoro pill: monospace so the countdown digits don't jitter. Phase colors
+   stay semantically fixed (work/break) rather than themed, so they read
+   consistently regardless of palette. */
 #pomodoro-btn {
   width: auto !important;
   padding: 0 10px !important;
   font-size: 12px !important;
+  font-family: var(--fb-font-mono) !important;
   font-variant-numeric: tabular-nums;
-  color: #8f9096;
+  color: var(--fb-muted);
 }
-#pomodoro-btn.running { color: #ccc; }
+#pomodoro-btn.running { color: var(--fb-text); }
 #pomodoro-btn.running.phase-work { color: #e08a87; }
 #pomodoro-btn.running.phase-shortBreak { color: #8fce8f; }
 #pomodoro-btn.running.phase-longBreak { color: #8fb2ef; }
 
-#settings-btn { font-size: 15px !important; }
-
-#launcher-btn { font-size: 13px !important; }
-#dashboard-btn { font-size: 13px !important; }
-
-#ai-chat-btn { font-size: 13px !important; }
-#ai-chat-btn.active { background: #2a3a52; color: #9cc4ff; }
-#ai-chat-btn.active:hover { background: #33455f; }
-
 #suggestions {
   position: fixed;
-  background: #202124;
-  border: 1px solid #33343a;
+  background: var(--fb-surface);
+  border: 1px solid var(--fb-border);
   border-radius: 8px;
   overflow: hidden;
   z-index: 500;
@@ -209,20 +251,20 @@ body.focus-mode #new-group-btn { display: none; }
   flex-direction: column;
   padding: 6px 12px;
   cursor: pointer;
-  border-bottom: 1px solid #26272b;
+  border-bottom: 1px solid var(--fb-border);
 }
 .suggestion:last-child { border-bottom: none; }
-.suggestion:hover, .suggestion.selected { background: #2a2b2f; }
+.suggestion:hover, .suggestion.selected { background: var(--fb-accent-soft); }
 .suggestion .s-title {
   font-size: 12.5px;
-  color: #e4e4e7;
+  color: var(--fb-text);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .suggestion .s-url {
   font-size: 11px;
-  color: #8f9096;
+  color: var(--fb-muted);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -233,12 +275,12 @@ body.focus-mode #new-group-btn { display: none; }
   bottom: 14px;
   left: 50%;
   transform: translateX(-50%);
-  background: #2a2b2f;
-  border: 1px solid #3a3b40;
+  background: var(--fb-surface);
+  border: 1px solid var(--fb-border);
   border-radius: 8px;
   padding: 8px 14px;
   font-size: 12px;
-  color: #ddd;
+  color: var(--fb-text);
   box-shadow: 0 8px 24px rgba(0,0,0,0.4);
   z-index: 998;
 }
@@ -263,8 +305,8 @@ body.focus-mode #new-group-btn { display: none; }
   position: absolute;
   top: 42px;
   right: 12px;
-  background: #2a2b2f;
-  border: 1px solid #3d3e42;
+  background: var(--fb-surface);
+  border: 1px solid var(--fb-border);
   border-radius: 8px;
   padding: 6px 10px;
   display: flex;
@@ -275,57 +317,61 @@ body.focus-mode #new-group-btn { display: none; }
 }
 #find-box.hidden { display: none; }
 #find-input {
-  background: #17181a;
-  border: 1px solid #33343a;
+  background: var(--fb-bg);
+  border: 1px solid var(--fb-border);
   border-radius: 4px;
-  color: #e4e4e7;
+  color: var(--fb-text);
   padding: 4px 8px;
   font-size: 12px;
   outline: none;
   width: 160px;
 }
-#find-input:focus { border-color: #5b8def; }
+#find-input:focus { border-color: var(--fb-accent); }
 #find-count {
   font-size: 11px;
-  color: #8f9096;
+  color: var(--fb-muted);
   min-width: 40px;
   text-align: center;
+  font-family: var(--fb-font-mono);
 }
 #find-box button {
   background: transparent;
   border: none;
-  color: #ccc;
+  color: var(--fb-muted);
   cursor: pointer;
   padding: 4px 6px;
   font-size: 11px;
   border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
 }
-#find-box button:hover { background: #35363b; color: #fff; }
+#find-box button:hover { background: var(--fb-accent-soft); color: var(--fb-text); }
 
 #zoom-badge {
   position: absolute;
   right: 32px;
-  background: #2a2b2f;
-  color: #a3a3a8;
+  background: var(--fb-surface);
+  color: var(--fb-muted);
   font-size: 10.5px;
   padding: 2px 6px;
   border-radius: 10px;
   cursor: pointer;
-  border: 1px solid #3d3e42;
+  border: 1px solid var(--fb-border);
   transition: all 0.15s ease;
   z-index: 6;
+  font-family: var(--fb-font-mono);
 }
 #zoom-badge:hover {
-  background: #35363b;
-  color: #fff;
-  border-color: #5b8def;
+  background: var(--fb-accent-soft);
+  color: var(--fb-text);
+  border-color: var(--fb-accent);
 }
 #zoom-badge.hidden { display: none; }
 
 .tab-audio-btn {
   background: transparent;
   border: none;
-  color: #999;
+  color: var(--fb-muted);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -334,18 +380,16 @@ body.focus-mode #new-group-btn { display: none; }
   border-radius: 3px;
   margin-left: 2px;
 }
-.tab-audio-btn:hover { background: #3d3e42; color: #fff; }
+.tab-audio-btn:hover { background: var(--fb-accent-soft); color: var(--fb-text); }
 .tab-audio-btn svg {
   width: 12px;
   height: 12px;
   fill: currentColor;
 }
 
-/* Deliberately loud, not just "a bit darker" — this state means what's
-   happening in this tab isn't saved anywhere, and that should be obvious
-   at a glance, not something you notice only after checking. Violet is
-   used nowhere else in the UI, so it reads unambiguously as "different
-   mode" rather than a variant of the normal palette. */
+/* Incognito is a distinct mode signal, deliberately palette-independent — a
+   violet used nowhere else so it always reads as "different mode," not a
+   variant of the current theme. */
 #incognito-badge {
   display: none;
   align-items: center;
@@ -362,12 +406,8 @@ body.focus-mode #new-group-btn { display: none; }
 }
 #incognito-badge svg { width: 13px; height: 13px; flex-shrink: 0; }
 
-body.incognito {
-  background: #14101f;
-}
-body.incognito #incognito-badge {
-  display: flex;
-}
+body.incognito { background: #14101f; }
+body.incognito #incognito-badge { display: flex; }
 body.incognito #tab-strip {
   background: #1a1430;
   box-shadow: inset 0 -2px 0 #4a3480;
@@ -376,46 +416,20 @@ body.incognito #toolbar {
   background: #1e1733;
   border-bottom-color: #4a3480;
 }
-body.incognito #toolbar button:hover {
-  background: #2e2450;
-}
-body.incognito .tab {
-  background: #251d40;
-  color: #d8c8ff;
-}
-body.incognito .tab.active {
-  background: #3a2a5c;
-  color: #fff;
-  border-top-color: #8b6fd9;
-}
-body.incognito .tab.incognito .favicon {
-  background: transparent;
-  color: #b39ddb;
-}
+body.incognito #toolbar button:hover { background: #2e2450; }
+body.incognito .tab { color: #b9a8e0; }
+body.incognito .tab:hover { color: #e6dcff; }
+body.incognito .tab.active { color: #fff; border-bottom-color: #8b6fd9; }
+body.incognito .tab.active .favicon:empty::before { background: #8b6fd9; }
 body.incognito #address-bar {
   background: #14101f;
   border-color: #4a3480;
   color: #e6dcff;
 }
-body.incognito #address-bar:focus {
-  border-color: #8b6fd9;
-}
+body.incognito #address-bar:focus { border-color: #8b6fd9; }
 
-/* A regular (non-incognito) window can still have individually-opened
-   incognito tabs mixed in with normal ones (right-click the "+" button) —
-   those get the same violet tab styling without the whole window (or
-   toolbar/badge) switching modes, since the other open tabs are still
-   perfectly normal. */
-.tab.incognito {
-  background: #251d40;
-  color: #d8c8ff;
-  border-top: 3px solid #6b4fb0;
-}
-.tab.incognito.active {
-  background: #3a2a5c;
-  color: #fff;
-}
-.tab.incognito .favicon {
-  background: transparent;
-  color: #b39ddb;
-}
+/* A normal window can still have individual incognito tabs mixed in; those
+   get the violet treatment without the whole window switching modes. */
+.tab.incognito { color: #b9a8e0; }
+.tab.incognito.active { color: #fff; border-bottom-color: #8b6fd9; }
+.tab.incognito .favicon { color: #b39ddb; }

@@ -1,9 +1,21 @@
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, "Segoe UI", Roboto, sans-serif; }
+:root {
+  --fb-bg: #211d1a;
+  --fb-surface: #2a2521;
+  --fb-text: #ece6df;
+  --fb-muted: #a89f92;
+  --fb-border: #3a332c;
+  --fb-accent: #d98b6b;
+  --fb-accent-soft: #d98b6b22;
+  --fb-font-sans: -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fb-font-mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--fb-font-sans); }
 
 html, body {
   height: 100%;
-  background: #1e1f22;
-  color: #e4e4e7;
+  background: var(--fb-bg);
+  color: var(--fb-text);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,15 +24,11 @@ html, body {
   transition: background 0.3s ease;
 }
 
-body.phase-work { background: #241d1d; }
-body.phase-shortBreak { background: #1b241d; }
-body.phase-longBreak { background: #1b1f24; }
-
 #phase-label {
   font-size: 13px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #8f9096;
+  color: var(--fb-muted);
   margin-bottom: 6px;
 }
 
@@ -34,10 +42,15 @@ body.phase-longBreak { background: #1b1f24; }
 #time {
   font-size: 56px;
   font-weight: 600;
+  font-family: var(--fb-font-mono);
   font-variant-numeric: tabular-nums;
-  min-width: 140px;
+  min-width: 150px;
   text-align: center;
+  color: var(--fb-text);
 }
+body.phase-work #time { color: #e08a87; }
+body.phase-shortBreak #time { color: #8fce8f; }
+body.phase-longBreak #time { color: #8fb2ef; }
 
 .time-adjust {
   display: flex;
@@ -45,18 +58,18 @@ body.phase-longBreak { background: #1b1f24; }
   gap: 4px;
 }
 .adjust-btn {
-  font-family: inherit;
+  font-family: var(--fb-font-mono);
   font-size: 11px;
   font-variant-numeric: tabular-nums;
   border: none;
   border-radius: 6px;
   padding: 4px 8px;
   cursor: pointer;
-  background: #2a2b2f;
-  color: #b7b8bd;
+  background: var(--fb-surface);
+  color: var(--fb-muted);
   min-width: 40px;
 }
-.adjust-btn:hover { background: #35363b; color: #e4e4e7; }
+.adjust-btn:hover { background: var(--fb-accent-soft); color: var(--fb-text); }
 
 #cycle-dots {
   display: flex;
@@ -67,7 +80,7 @@ body.phase-longBreak { background: #1b1f24; }
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background: #35363b;
+  background: var(--fb-border);
 }
 .dot.filled { background: #d9534f; }
 body.phase-shortBreak .dot.filled { background: #5cb85c; }
@@ -75,19 +88,22 @@ body.phase-longBreak .dot.filled { background: #5b8def; }
 
 #controls { display: flex; gap: 8px; }
 #controls button {
-  font-family: inherit;
+  font-family: var(--fb-font-sans);
   font-size: 12.5px;
   border: none;
   border-radius: 8px;
   padding: 10px 16px;
   cursor: pointer;
-  background: #2a2b2f;
-  color: #e4e4e7;
+  background: var(--fb-surface);
+  color: var(--fb-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
-#controls button:hover { background: #35363b; }
-#primary-btn { background: #3a4a6b; color: #cfe0ff; }
-#primary-btn:hover { background: #46587f; }
+#controls button:hover { background: var(--fb-accent-soft); }
+#primary-btn { background: var(--fb-accent); color: #fff; }
+#primary-btn:hover { background: var(--fb-accent); filter: brightness(1.08); }
 
-#mute-btn { padding: 10px 12px; font-size: 14px; }
-#mute-btn.active { background: #5c3a3a; color: #ffcfcf; }
-#mute-btn.active:hover { background: #6f4646; }
+#mute-btn { padding: 10px 12px; }
+#mute-btn svg { display: block; }
+#mute-btn.active { background: var(--fb-accent-soft); color: var(--fb-accent); }

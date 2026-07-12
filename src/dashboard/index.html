@@ -3,9 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <title>Browser Dashboard</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="dashboard.css" />
 </head>
 <body>
@@ -35,7 +32,7 @@
       <div class="search-box">
         <svg class="search-icon" viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
         <input type="text" id="history-search" placeholder="Search visited pages..." autocomplete="off" />
-        <button id="clear-search-btn" class="hidden" title="Clear search">&times;</button>
+        <button id="clear-search-btn" class="hidden" title="Clear search" aria-label="Clear search" data-icon="close" data-icon-size="16"></button>
       </div>
       
       <div id="history-container" class="history-list">
@@ -50,8 +47,8 @@
            entirely when nothing's pinned. -->
       <div id="nudge-card" class="panel-card nudge-card hidden">
         <div class="nudge-header">
-          <span class="nudge-title">🎯 Latest focus check-in</span>
-          <button id="nudge-dismiss-btn" title="Dismiss">&times;</button>
+          <span class="nudge-title"><span class="nudge-title-icon" data-icon="target" data-icon-size="14"></span> Latest focus check-in</span>
+          <button id="nudge-dismiss-btn" title="Dismiss" aria-label="Dismiss" data-icon="close" data-icon-size="16"></button>
         </div>
         <div id="nudge-message" class="nudge-message"></div>
         <div id="nudge-time" class="nudge-time"></div>
@@ -125,6 +122,9 @@
     </section>
   </main>
 
+  <script src="../theme/palettes.js"></script>
+  <script src="../theme/applyTheme.js"></script>
+  <script src="../theme/icons.js"></script>
   <script src="dashboard.js"></script>
 </body>
 </html>
