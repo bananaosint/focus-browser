@@ -60,7 +60,7 @@ window).
 ## For developers
 
 ```powershell
-git clone https://github.com/<your-username>/focus-browser.git
+git clone https://github.com/bananaosint/focus-browser.git
 cd focus-browser
 npm install
 npm start
